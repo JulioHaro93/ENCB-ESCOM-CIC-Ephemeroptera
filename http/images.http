@@ -1,0 +1,32 @@
+
+@baseUrl= http://localhost
+@port = 8080
+@token = {{login.response.body.token}}
+
+# @name login
+POST {{baseUrl}}:{{port}}/api/login
+Content-Type: application/json
+
+{
+    "correo": "test@test.com",
+    "password":"123456"
+}
+
+###
+# @name getImagesProfile
+GET {{baseUrl}}:{{port}}/api/images/
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name uploadImgProfile
+POST {{baseUrl}}:{{port}}/api/images/uploadProfileImage/perro1.jpeg
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name uploadImg
+POST {{baseUrl}}:{{port}}/api/images/uploadImage/perro1.jpeg
+Content-Type: application/json
+Authorization: Bearer {{token}}
+

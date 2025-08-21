@@ -1,0 +1,21 @@
+{
+    "mimetypes": ["image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+    "image/bmp",
+    "image/tiff",
+    "image/svg+xml",
+    "image/heif",
+    "image/heic",
+    "video/mp4",
+    "video/x-msvideo",
+    "video/x-ms-wmv",
+    "video/mpeg",
+    "video/quicktime",
+    "video/webm",
+    "video/3gpp",
+    "video/3gpp2",
+    "video/ogg",
+    "application/pdf"]
+}

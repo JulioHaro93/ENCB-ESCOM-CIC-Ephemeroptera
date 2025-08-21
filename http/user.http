@@ -1,0 +1,70 @@
+
+@baseUrl= http://localhost
+@port = 8080
+@token = {{login.response.body.token}}
+
+# @name login
+POST {{baseUrl}}:{{port}}/api/login
+Content-Type: application/json
+
+{
+    "correo": "test@test.com",
+    "password":"123456"
+}
+
+###
+# @name getUsers
+GET {{baseUrl}}:{{port}}/api/SeeUsers?page=1&limit=20
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name createUser
+POST {{baseUrl}}:{{port}}/api/createANewUser
+Content-Type: application/json
+
+    {
+        "nombre": "Super Usuario",
+        "correo": "test@test.com",
+        "password": "123456",
+        "institution": "Un Super Usuario",
+        "address": "Nowhere man 2",
+        "activo": true,
+        "roles": "superAdminRole",
+        "nickname": "SUDO1"
+
+    }
+
+###
+# @name getProfile
+GET {{baseUrl}}:{{port}}/api/profile/68a6484e4c72faee1225bf6f
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name modifyProfile
+PUT {{baseUrl}}:{{port}}/api/userModify/68a6484e4c72faee1225bf6f
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+    {
+        "nombre": "AdminBueno",
+        "correo": "Admin123@Admin.com",
+        "institution": "Developer",
+        "address": "New street por ahí",
+        "activo": false,
+        "nickname": "AdminDev"
+
+    }
+
+###
+# @name invalidateUser
+PUT {{baseUrl}}:{{port}}/api/unactiveUser/68a66ba10807dc47ec3bff98
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name deleteUser
+DELETE {{baseUrl}}:{{port}}/api/deleteUser/68a6484e4c72faee1225bf6f
+Content-Type: application/json
+Authorization: Bearer {{token}}

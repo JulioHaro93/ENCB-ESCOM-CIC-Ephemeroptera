@@ -1,0 +1,47 @@
+{
+    "superAdminRole": {
+        "total": true,
+        "roles": ["deleteProfile",
+            "seeOneUser",
+            "modifyMyProfile",
+            "deleteImage",
+            "deleteMyImage",
+            "deleteVideo",
+            "deleteMyVideo",
+            "invalidateUser",
+            "deleteUser",
+            "reportUser"
+            ]
+    },
+    "adminRole": {
+        "total": false,
+        "roles": [
+            "deleteProfile",
+            "seeOneUser",
+            "modifyMyProfile",
+            "deleteImage",
+            "deleteMyImage",
+            "deleteVideo",
+            "deleteMyVideo",
+            "invalidateUser",
+            "deleteUser",
+            "reportUser",
+            "uploadPhoto",
+            "uploadImage"]
+    },
+    "normalUser":{
+        "total": false,
+        "roles":  [
+            "seeOneUser",
+            "modifyMyProfile",
+            "deleteMyImage",
+            "deleteMyVideo",
+            "reportUser",
+            "uploadImage",
+            "uploadPhoto"]
+    },
+    "noRoles":{
+        "total": false,
+        "roles":[]
+    }
+}

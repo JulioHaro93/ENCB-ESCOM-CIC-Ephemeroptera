@@ -1,0 +1,4 @@
+credenciales.txt
+.envs/.env
+package-lock.json
+node_modules
