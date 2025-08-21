@@ -10,7 +10,8 @@
             "deleteMyVideo",
             "invalidateUser",
             "deleteUser",
-            "reportUser"
+            "reportUser",
+            "uploaddoc"
             ]
     },
     "adminRole": {
@@ -27,7 +28,8 @@
             "deleteUser",
             "reportUser",
             "uploadPhoto",
-            "uploadImage"]
+            "uploadImage",
+            "uploaddoc"]
     },
     "normalUser":{
         "total": false,

@@ -141,7 +141,7 @@ router.delete('/deleteUser/:id', autenticateToken, async (req,res)=>{
     }
     if(validRole || validAuto){
         if(validationResult.error!== null){
-            const result = await users.deleteUser(body, id)
+            const result = await users.deleteUser(id)
             if(result.error){
                 res.json(result)
             }else{

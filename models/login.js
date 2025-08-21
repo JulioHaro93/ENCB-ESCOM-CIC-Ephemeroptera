@@ -28,7 +28,7 @@ const users = {
         const token = jwt.sign(
             { id: usuario._id, correo: usuario.correo, roles: usuario.roles },
             config.base.privateKey,
-            { expiresIn: "1h" }
+            { expiresIn: "7d" }
         );
         const userToken = {
             name: usuario.nombre,

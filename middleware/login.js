@@ -3,44 +3,52 @@ import users from '../models/login.js'
 import bcrypt from 'bcrypt'
 import config from '../config/index.js'
 
-
-const autenticateToken = async (req, res, next) =>{
+const autenticateToken = async (req, res, next) => {
     const jwtkey = config.base.privateKey
-    const authTokenHeader =  req.headers['authorization']
-    const token = authTokenHeader.split(' ')[1]
-
-    try{
-        if(!token){
-            req.status = 401,
-            req.body = {
-                success: false,
-                error: 'Sin autorización para realizar la acción'
-            }
-            return false
-        }
-        const decoded = jwt.verify(token, jwtkey)
-        console.log(decoded)
-        if(decoded){
-            req.user = decoded
-            next()
-        }else{
-            res.status = 401
-            res.body ={
-                success: false,
-                error: 'No hay usuario en el JWT'
-            }
-            next()
-        }
-    }catch(err){
-        res.status = 401
-        res.body = {
+    const authTokenHeader = req.headers['authorization']
+    
+    if (!authTokenHeader) {
+        return res.status(401).json({
             success: false,
-            error: err
-        }
-        return false
+            error: 'Sin autorización para realizar la acción'
+        });
     }
     
-    
+    if (!jwtkey) {
+        return res.status(500).json({
+            success: false,
+            error: 'No se ha configurado la clave secreta del JWT'
+        });
+    }
+     
+    const token = authTokenHeader.split(' ')[1]
+
+    try {
+        if (!token) {
+            return res.status(401).json({
+                success: false,
+                error: 'Sin autorización para realizar la acción'
+            });
+        }
+        
+        const decoded = jwt.verify(token, jwtkey)
+        
+        if (decoded) {
+            req.user = decoded
+            next()
+        } else {
+            return res.status(401).json({
+                success: false,
+                error: 'No hay usuario en el JWT'
+            });
+        }
+    } catch (err) {
+        return res.status(401).json({
+            success: false,
+            error: err.message || 'Error en la autenticación del token'
+        })
+    }
 }
+
 
 export default autenticateToken

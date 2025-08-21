@@ -53,7 +53,7 @@ Authorization: Bearer {{token}}
         "institution": "Developer",
         "address": "New street por ahí",
         "activo": false,
-        "nickname": "AdminDev"
+        "nickname": "AdminDevdd"
 
     }
 

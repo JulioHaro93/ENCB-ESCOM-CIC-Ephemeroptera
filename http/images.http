@@ -14,7 +14,7 @@ Content-Type: application/json
 
 ###
 # @name getImagesProfile
-GET {{baseUrl}}:{{port}}/api/images/
+GET {{baseUrl}}:{{port}}/api/images/68a6bc31c6202226baf02312?skip=1&limit=10&page=1
 Content-Type: application/json
 Authorization: Bearer {{token}}
 
@@ -29,4 +29,3 @@ Authorization: Bearer {{token}}
 POST {{baseUrl}}:{{port}}/api/images/uploadImage/perro1.jpeg
 Content-Type: application/json
 Authorization: Bearer {{token}}
-

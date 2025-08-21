@@ -1,6 +1,11 @@
 import fs from 'fs'
 import { fileTypeFromBuffer } from 'file-type'
 const mimes = JSON.parse(fs.readFileSync(new URL('../lib/mimetype.json', import.meta.url)))
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 const getMimeType = async (path) => {
   const buffer = fs.readFileSync(path)
@@ -22,11 +27,16 @@ const validateMimeType = async (mimeType) => {
   }
 }
 
+
 const validateFileExists = async (filePath) => {
+
   try {
-    await fs.access(filePath)
-    return { success: true }
+
+    const absolutePath = path.resolve(__dirname, __dirname, '..', filePath);
+    await fs.promises.access(absolutePath)
+    return { success: true };
   } catch (err) {
+    console.error('Error al acceder al archivo:', err);
     return {
       success: false,
       httpCode: 404,
@@ -35,5 +45,6 @@ const validateFileExists = async (filePath) => {
     }
   }
 }
+
 
 export { getMimeType, validateMimeType,validateFileExists }

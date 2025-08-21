@@ -12,7 +12,7 @@ router.get(`${path}/:id`, autenticateToken, async (req, res)=>{
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
     const skip = (page - 1) * limit
-    const imagenes = imagesControler.getImages(idUser, skip,limit,page)
+    const imagenes = await imagesControler.getImages(idUser, skip,limit,page)
 
     if(imagenes){
         res.json({imagenes})
@@ -78,7 +78,35 @@ router.post(`${path}/uploadImage/:key`, autenticateToken, async (req,res)=>{
     }
 
 })
+router.post(`${path}/uploaddoc/:key`, autenticateToken, async (req,res)=>{
 
+    const key = req.params.key
+    const action ='uploaddoc'
+    const user = req.user
+    const validRole = checkRoles(user, action)
+    const validAuto = checkAutoProfile(user, user.id)
+    const validationResult = uploadPhoto.validate({key})
+
+    if(validAuto || validRole){
+        if(validationResult.error!==null){
+            const result = await imagesControler.uploadPDF(action, key, user)
+            res.json(result)
+        }else{
+            res.json({
+                    error: validationResult.error,
+                    httpCode: 400,
+                    errorMessage: 'Bad Request'
+                })
+        }
+    }else{
+        res.json({
+        success: false,
+        httpCode: 403,
+        error: 'Sin permisos para realizar la acción'
+        })
+    }
+
+})
 
 
 
