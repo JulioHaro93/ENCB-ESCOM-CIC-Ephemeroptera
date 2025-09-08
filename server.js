@@ -4,7 +4,10 @@ import usuariosRoutes from './routes/user.js'
 import loginRoutes from './routes/login.js'
 import imagesRouter from './routes/images.js'
 import bodyParser from 'body-parser';
-
+import path from 'path'
+import { fileURLToPath } from 'url';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 import dbConnection  from './db/db.js'
@@ -23,6 +26,7 @@ class Server{
         this.app.use('/api', usuariosRoutes)
         this.app.use('/api',loginRoutes)
         this.app.use('/api', imagesRouter)
+        this.app.use(express.static(path.join(__dirname,'public')));
     }
     middlewares(){
         this.app.use(cors())

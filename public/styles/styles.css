@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    background-color: #324642;
+}
+
+.presentation{
+    font-size: 20px;
+    color: white;
+}
+
+.titulo{
+    font-size: 40px;
+    color: white;
+}
+
+label {
+  display: block;
+  margin: 8px auto; /* centro horizontal */
+  text-align: left;  /* el texto del label queda alineado a la izquierda */
+  color: white;
+}
+
+input {
+  display: block;
+  margin: 8px auto; /* centro horizontal */
+  text-align: left; /* el texto dentro del input */
+  color: white;
+}
+
+.log{
+    color: white;
+    font-family: 'Poppins', sans-serif;
+}

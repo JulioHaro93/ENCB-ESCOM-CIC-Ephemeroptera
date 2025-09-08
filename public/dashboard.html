@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Usuarios</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e4e8;
+        }
+        
+        .header-left h1 {
+            color: #2c3e50;
+            font-size: 28px;
+        }
+        
+        .header-left p {
+            color: #7f8c8d;
+            font-size: 16px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            width: 250px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 20px;
+        }
+        
+        .sidebar {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .sidebar h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+        
+        .nav-item.active {
+            background: #3498db;
+            color: white;
+        }
+        
+        .main-content {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .filters {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .filter-btn.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .user-card {
+            border: 1px solid #e1e4e8;
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s;
+            background: white;
+        }
+        
+        .user-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .user-avatar-lg {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: #3498db;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .user-info-card h3 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .user-info-card p {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        
+        .user-details {
+            margin-top: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f2f6;
+            font-size: 14px;
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+        
+        .detail-value {
+            text-align: right;
+            max-width: 60%;
+            word-break: break-word;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background-color: #e6f4ea;
+            color: #137333;
+        }
+        
+        .status-inactive {
+            background-color: #fce8e6;
+            color: #c5221f;
+        }
+        
+        .role-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+        
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 30px;
+            gap: 10px;
+        }
+        
+        .pagination button {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .pagination button:hover:not(:disabled) {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .pagination button.active {
+            background: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .page-info {
+            margin: 0 15px;
+            font-size: 14px;
+            color: #5f6368;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+        }
+        
+        .error {
+            text-align: center;
+            padding: 40px;
+            color: #e74c3c;
+        }
+        
+        .error button {
+            margin-top: 15px;
+            padding: 8px 16px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .users-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>Dashboard de Usuarios</h1>
+                <p>Gestiona y visualiza todos los usuarios del sistema</p>
+            </div>
+            <div class="header-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Buscar usuarios...">
+                </div>
+                <div class="user-info">
+                    <div class="user-avatar" id="currentUserAvatar">A</div>
+                    <span id="currentUserName">Administrador</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="dashboard">
+            <div class="sidebar">
+                <h3>Navegación</h3>
+                <div class="nav-item active">
+                    <i class="fas fa-users"></i>
+                    <span>Usuarios</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Estadísticas</span>
+                </div>
+                <div class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Configuración</span>
+                </div>
+                <div class="nav-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Cerrar Sesión</span>
+                </div>
+            </div>
+            
+            <div class="main-content">
+                <div class="filters">
+                    <div class="filter-group">
+                        <button class="filter-btn active" data-filter="all">Todos</button>
+                        <button class="filter-btn" data-filter="active">Activos</button>
+                        <button class="filter-btn" data-filter="inactive">Inactivos</button>
+                        <button class="filter-btn" data-filter="superAdmin">Super Admin</button>
+                        <button class="filter-btn" data-filter="normal">Usuarios Normales</button>
+                    </div>
+                    <div>
+                        <select id="sortSelect">
+                            <option value="name">Ordenar por nombre</option>
+                            <option value="recent">Más recientes</option>
+                            <option value="oldest">Más antiguos</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="usersContainer">
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Cargando usuarios...</p>
+                    </div>
+                </div>
+                
+                <div class="pagination">
+                    <button id="prevPage" disabled>Anterior</button>
+                    <span class="page-info" id="pageInfo">Página 1 de 1</span>
+                    <button id="nextPage">Siguiente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Variables globales
+        let currentPage = 1;
+        let totalPages = 1;
+        let allUsers = [];
+        let currentFilter = 'all';
+
+        // Verificar autenticación al cargar la página
+        function checkAuth() {
+            const token = localStorage.getItem('authToken');
+            const userData = localStorage.getItem('userData');
+            
+            if (!token) {
+                window.location.href = "/log.html";
+                return false;
+            }
+            
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    document.getElementById('currentUserName').textContent = user.name || 'Usuario';
+                    document.getElementById('currentUserAvatar').textContent = user.name ? user.name.charAt(0) : 'U';
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+            
+            return true;
+        }
+
+        // Función para formatear fecha
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Función para cargar usuarios desde la API
+        async function loadUsers(page = 1, limit = 20) {
+            if (!checkAuth()) return;
+            
+            const token = localStorage.getItem('authToken');
+            
+            try {
+                document.getElementById('usersContainer').innerHTML = `
+                    <div class="loading">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Cargando usuarios...</p>
+                    </div>
+                `;
+                
+                // Simulamos la respuesta con los datos proporcionados
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                // Datos de ejemplo basados en la respuesta proporcionada
+                const mockResponse = {
+                    result: {
+                        success: true,
+                        users: [
+                            {
+                                "_id": "68a6484e4c72faee1225bf6f",
+                                "nombre": "AdminBueno",
+                                "correo": "Admin123@Admin.com",
+                                "activo": false,
+                                "google": false,
+                                "roles": "superAdminRole",
+                                "registerDate": "2025-08-20T22:12:23.127Z",
+                                "institution": "Developer",
+                                "address": "New street por ahí",
+                                "nickname": "AdminDev"
+                            },
+                            {
+                                "_id": "68a663836d89bd95fc2a4190",
+                                "nombre": "Usuario Genérico 1",
+                                "correo": "correo1@correo.com",
+                                "activo": true,
+                                "google": false,
+                                "roles": "normalUser",
+                                "registerDate": "2025-08-21T00:05:15.056Z",
+                                "institution": "usuario Común",
+                                "address": "Nowhere man",
+                                "nickname": "User1234"
+                            },
+                            {
+                                "_id": "68a66b910807dc47ec3bff94",
+                                "nombre": "Usuario Genérico 2",
+                                "correo": "correo3@correo.com",
+                                "activo": true,
+                                "google": false,
+                                "roles": "normalUser",
+                                "registerDate": "2025-08-21T00:42:01.206Z",
+                                "institution": "usuario Común",
+                                "address": "Nowhere man 2",
+                                "nickname": "User12345"
+                            },
+                            {
+                                "_id": "68a66ba10807dc47ec3bff98",
+                                "nombre": "AdminBueno",
+                                "correo": "Admonmon@Admin.com",
+                                "activo": false,
+                                "google": false,
+                                "roles": "noRole",
+                                "registerDate": "2025-08-21T00:42:01.206Z",
+                                "institution": "Developer",
+                                "address": "New street por ahí",
+                                "nickname": "AdminDeveloper"
+                            },
+                            {
+                                "_id": "68a6bc31c6202226baf02312",
+                                "nombre": "Super Usuario",
+                                "correo": "test@test.com",
+                                "activo": true,
+                                "google": false,
+                                "roles": "superAdminRole",
+                                "registerDate": "2025-08-21T06:24:43.115Z",
+                                "institution": "Un Super Usuario",
+                                "address": "Nowhere man 2",
+                                "nickname": "SUDO1"
+                            },
+                            {
+                                "_id": "68a77d9ec3dd0e91b1a15d89",
+                                "nombre": "Super Usuario 2",
+                                "correo": "admin2@admin2.com",
+                                "activo": true,
+                                "google": false,
+                                "roles": "superAdminRole",
+                                "registerDate": "2025-08-21T20:06:30.652Z",
+                                "institution": "Un Super Usuario",
+                                "address": "Nowhere man 2",
+                                "nickname": "SUDO2"
+                            },
+                            {
+                                "_id": "68a7813ccd711fd59f110c30",
+                                "nombre": "Super Usuario 5",
+                                "correo": "admin2@admin5.com",
+                                "activo": true,
+                                "google": false,
+                                "roles": "superAdminRole",
+                                "registerDate": "2025-08-21T20:23:30.563Z",
+                                "institution": "Un Super Usuario",
+                                "address": "Nowhere man 2",
+                                "nickname": "SUDO6"
+                            }
+                        ],
+                        "page": 1,
+                        "limit": 20,
+                        "totalDocuments": 7,
+                        "totalPages": 1
+                    }
+                };
+                
+                // En un caso real, descomentar esto:
+                /*
+                const response = await fetch(`/api/SeeUsers?page=${page}&limit=${limit}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.status === 401) {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                    window.location.href = "/log.html";
+                    return;
+                }
+                
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                return data.result;
+                */
+                
+                return mockResponse.result;
+                
+            } catch (error) {
+                console.error('Error al cargar usuarios:', error);
+                document.getElementById('usersContainer').innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error al cargar los usuarios: ${error.message}</p>
+                        <button onclick="loadUsers()">Reintentar</button>
+                    </div>
+                `;
+            }
+        }
+
+        // Función para renderizar usuarios
+        function renderUsers(users) {
+            const container = document.getElementById('usersContainer');
+            
+            if (!users || users.length === 0) {
+                container.innerHTML = `
+                    <div class="error">
+                        <i class="fas fa-users-slash"></i>
+                        <p>No se encontraron usuarios</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = `
+                <div class="users-grid">
+                    ${users.map(user => `
+                        <div class="user-card">
+                            <div class="user-header">
+                                <div class="user-avatar-lg">${user.nombre ? user.nombre.charAt(0) : 'U'}</div>
+                                <div class="user-info-card">
+                                    <h3>${user.nombre || 'Usuario sin nombre'}</h3>
+                                    <p>${user.correo || 'Sin correo'}</p>
+                                    <span class="role-badge">${user.roles || 'Sin rol'}</span>
+                                </div>
+                            </div>
+                            <div class="user-details">
+                                <div class="detail-item">
+                                    <span class="detail-label">Estado:</span>
+                                    <span class="detail-value">
+                                        <span class="status-badge ${user.activo ? 'status-active' : 'status-inactive'}">
+                                            ${user.activo ? 'Activo' : 'Inactivo'}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Nickname:</span>
+                                    <span class="detail-value">${user.nickname || 'N/A'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Institución:</span>
+                                    <span class="detail-value">${user.institution || 'N/A'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Dirección:</span>
+                                    <span class="detail-value">${user.address || 'N/A'}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">Registro:</span>
+                                    <span class="detail-value">${formatDate(user.registerDate)}</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="detail-label">ID:</span>
+                                    <span class="detail-value">${user._id ? user._id.substring(0, 8) + '...' : 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Función para filtrar usuarios
+        function filterUsers() {
+            let filteredUsers = allUsers;
+            
+            switch(currentFilter) {
+                case 'active':
+                    filteredUsers = allUsers.filter(user => user.activo === true);
+                    break;
+                case 'inactive':
+                    filteredUsers = allUsers.filter(user => user.activo === false);
+                    break;
+                case 'superAdmin':
+                    filteredUsers = allUsers.filter(user => user.roles === 'superAdminRole');
+                    break;
+                case 'normal':
+                    filteredUsers = allUsers.filter(user => user.roles === 'normalUser');
+                    break;
+            }
+            
+            renderUsers(filteredUsers);
+        }
+
+        // Función para actualizar la paginación
+        function updatePagination(page, total) {
+            currentPage = page;
+            totalPages = total;
+            
+            document.getElementById('prevPage').disabled = page <= 1;
+            document.getElementById('nextPage').disabled = page >= total;
+            document.getElementById('pageInfo').textContent = `Página ${page} de ${total}`;
+        }
+
+        // Función para cerrar sesión
+        function logout() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userData');
+            window.location.href = "/log.html";
+        }
+
+        // Inicializar la página
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!checkAuth()) return;
+            
+            // Configurar evento de logout
+            document.getElementById('logoutBtn').addEventListener('click', logout);
+            
+            // Configurar filtros
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    filterUsers();
+                });
+            });
+            
+            // Cargar usuarios
+            const usersData = await loadUsers(1);
+            if (usersData && usersData.success) {
+                allUsers = usersData.users || [];
+                renderUsers(allUsers);
+                updatePagination(usersData.page, usersData.totalPages);
+            }
+            
+            // Configurar la paginación
+            document.getElementById('prevPage').addEventListener('click', async () => {
+                if (currentPage > 1) {
+                    const newData = await loadUsers(currentPage - 1);
+                    if (newData && newData.success) {
+                        allUsers = newData.users || [];
+                        renderUsers(allUsers);
+                        updatePagination(newData.page, newData.totalPages);
+                    }
+                }
+            });
+            
+            document.getElementById('nextPage').addEventListener('click', async () => {
+                if (currentPage < totalPages) {
+                    const newData = await loadUsers(currentPage + 1);
+                    if (newData && newData.success) {
+                        allUsers = newData.users || [];
+                        renderUsers(allUsers);
+                        updatePagination(newData.page, newData.totalPages);
+                    }
+                }
+            });
+            
+            // Configurar búsqueda
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const searchTerm = e.target.value.toLowerCase();
+                if (searchTerm && allUsers.length > 0) {
+                    const filteredUsers = allUsers.filter(user => 
+                        (user.nombre && user.nombre.toLowerCase().includes(searchTerm)) || 
+                        (user.correo && user.correo.toLowerCase().includes(searchTerm)) ||
+                        (user.nickname && user.nickname.toLowerCase().includes(searchTerm)) ||
+                        (user.roles && user.roles.toLowerCase().includes(searchTerm))
+                    );
+                    renderUsers(filteredUsers);
+                } else {
+                    renderUsers(allUsers);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

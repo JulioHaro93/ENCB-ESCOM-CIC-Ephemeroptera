@@ -24,13 +24,13 @@ POST {{baseUrl}}:{{port}}/api/createANewUser
 Content-Type: application/json
 
     {
-        "nombre": "Super Usuario",
-        "correo": "test@test.com",
+        "nombre": "Usuario nuevo",
+        "correo": "test@test1.com",
         "password": "123456",
         "institution": "Un Super Usuario",
-        "address": "Nowhere man 2",
+        "address": "Nowhere man 3",
         "activo": true,
-        "roles": "superAdminRole",
+        "roles": "normalUser",
         "nickname": "SUDO1"
 
     }

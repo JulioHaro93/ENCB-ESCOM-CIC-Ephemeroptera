@@ -8,7 +8,7 @@ const path = '/login'
 const router = Router();
 
 router.post(path,  async (req,res)=>{
-
+    //console.log(req.body)
     const {correo, password} = req.body
     const log = await users.logUser(correo, password, 'logs/create')
     if(log.user){
