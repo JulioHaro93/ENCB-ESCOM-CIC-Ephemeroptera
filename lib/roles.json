@@ -29,7 +29,10 @@
             "reportUser",
             "uploadPhoto",
             "uploadImage",
-            "uploaddoc"]
+            "uploaddoc",
+            "createImageData",
+            "uploaddoc",
+            "uploadVideo"]
     },
     "normalUser":{
         "total": false,
@@ -40,7 +43,11 @@
             "deleteMyVideo",
             "reportUser",
             "uploadImage",
-            "uploadPhoto"]
+            "uploadPhoto",
+            "createImageData",
+            "uploaddoc",
+            "uploadVideo"
+        ]
     },
     "noRoles":{
         "total": false,

@@ -363,6 +363,18 @@
                 width: 100%;
             }
         }
+
+        .user-link {
+            color: #2c3e50;
+            text-decoration: none;
+            transition: color 0.2s;
+            }
+
+            .user-link:hover {
+            color: #3498db;
+            text-decoration: underline;
+            }
+
     </style>
 </head>
 <body>
@@ -635,6 +647,7 @@
         // Función para renderizar usuarios
         function renderUsers(users) {
             const container = document.getElementById('usersContainer');
+            container.innerHTML = '';
             
             if (!users || users.length === 0) {
                 container.innerHTML = `
@@ -643,6 +656,18 @@
                         <p>No se encontraron usuarios</p>
                     </div>
                 `;
+                 users.forEach(user => {
+                    container.innerHTML += `
+                    <div class="user-card">
+                        <h3>
+                        <a href="profile.html?id=${user._id}" class="user-link">
+                            ${user.nombre || 'Usuario sin nombre'}
+                        </a>
+                        </h3>
+                        <p>${user.correo}</p>
+                    </div>
+                    `;
+                });
                 return;
             }
             
@@ -653,7 +678,9 @@
                             <div class="user-header">
                                 <div class="user-avatar-lg">${user.nombre ? user.nombre.charAt(0) : 'U'}</div>
                                 <div class="user-info-card">
-                                    <h3>${user.nombre || 'Usuario sin nombre'}</h3>
+                                    <a href="profile.html?id=${user._id}" class="user-link">
+                                    <h3>${user.nombre || 'Usuario sin nombre' }</h3>
+                                    </a>
                                     <p>${user.correo || 'Sin correo'}</p>
                                     <span class="role-badge">${user.roles || 'Sin rol'}</span>
                                 </div>
@@ -682,10 +709,6 @@
                                 <div class="detail-item">
                                     <span class="detail-label">Registro:</span>
                                     <span class="detail-value">${formatDate(user.registerDate)}</span>
-                                </div>
-                                <div class="detail-item">
-                                    <span class="detail-label">ID:</span>
-                                    <span class="detail-value">${user._id ? user._id.substring(0, 8) + '...' : 'N/A'}</span>
                                 </div>
                             </div>
                         </div>
@@ -756,6 +779,7 @@
                 allUsers = usersData.users || [];
                 renderUsers(allUsers);
                 updatePagination(usersData.page, usersData.totalPages);
+
             }
             
             // Configurar la paginación
@@ -797,6 +821,8 @@
                 }
             });
         });
+
+        
     </script>
 </body>
 </html>

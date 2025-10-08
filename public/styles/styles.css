@@ -1,36 +1,122 @@
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-    background-color: #324642;
-}
 
 .presentation{
     font-size: 20px;
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 .titulo{
     font-size: 40px;
-    color: white;
+    color: rgb(0, 0, 0);
 }
 
 label {
   display: block;
   margin: 8px auto; /* centro horizontal */
   text-align: left;  /* el texto del label queda alineado a la izquierda */
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 input {
   display: block;
   margin: 8px auto; /* centro horizontal */
   text-align: left; /* el texto dentro del input */
-  color: white;
+  color: rgb(0, 0, 0);
 }
 
 .log{
-    color: white;
+    color: rgb(0, 0, 0);
     font-family: 'Poppins', sans-serif;
 }
+
+ body {
+      background-color: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #333;
+      padding: 40px;
+    }
+    .profile-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+      padding: 30px;
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      border-bottom: 1px solid #e1e4e8;
+      padding-bottom: 20px;
+    }
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #3498db;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      font-weight: bold;
+    }
+    .profile-info h2 {
+      font-size: 24px;
+      color: #2c3e50;
+    }
+    .profile-info p {
+      color: #7f8c8d;
+      font-size: 15px;
+    }
+    .details {
+      margin-top: 25px;
+    }
+    .detail-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .detail-item:last-child {
+      border-bottom: none;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #7f8c8d;
+    }
+    .detail-value {
+      max-width: 60%;
+      text-align: right;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-top: 25px;
+      background: #3498db;
+      color: white;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .back-btn:hover {
+      background: #2980b9;
+    }
+    .files-container {
+      margin-top: 25px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .files-container img,
+    .files-container video,
+    .files-container embed {
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+    }
+    .placeholder {
+      text-align: center;
+      width: 100%;
+      margin-top: 20px;
+      color: #7f8c8d;
+    }

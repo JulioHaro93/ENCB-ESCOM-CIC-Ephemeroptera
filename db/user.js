@@ -19,5 +19,5 @@ const UserSchema = new Schema({
 })
 
 const Usuarios = model('Usuarios', UserSchema);
-
+ 
 export default Usuarios

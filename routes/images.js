@@ -1,11 +1,28 @@
 import {Router} from 'express';
 import imagesControler from '../models/images.js'
-import { uploadPhoto, createImageURL} from '../schemas/images.js'
+import { uploadPhoto, createImageURL, imgId} from '../schemas/images.js'
 import autenticateToken from '../middleware/login.js'
 import checkAutoProfile from '../helpers/checkAuto.js'
 const path = '/images'
 import checkRoles from '../helpers/checkRoles.js'
 const router = Router()
+
+
+router.get(`${path}/userImages`, autenticateToken, async (req,res)=>{
+    const query = req.query
+    const user = query.user
+    const skip = parseInt(req.query.skip) || 0
+    const limit = parseInt(req.query.limit) || 10
+    const action = 'uploadImage'
+
+        const url = await imagesControler.getImages(user, skip, limit, action)
+        res.json({
+            success: true,
+            httpCode: 200,
+            url
+        })
+})
+    
 
 router.get(`${path}/:id`, autenticateToken, async (req, res)=>{
     const idUser = req.params.id
@@ -107,6 +124,8 @@ router.post(`${path}/uploaddoc/:key`, autenticateToken, async (req,res)=>{
     }
 
 })
+
+
 
 
 

@@ -2,3 +2,5 @@ credenciales.txt
 .envs/.env
 package-lock.json
 node_modules
+CNN/ResNet50_c5_bordes.h5
+CNN/ResNet50_c5_color.h5

@@ -3,6 +3,7 @@ import cors from 'cors'
 import usuariosRoutes from './routes/user.js'
 import loginRoutes from './routes/login.js'
 import imagesRouter from './routes/images.js'
+import imageDataRouter from './routes/imageData.js'
 import bodyParser from 'body-parser';
 import path from 'path'
 import { fileURLToPath } from 'url';
@@ -18,7 +19,6 @@ class Server{
         this.middlewares()
         this.routes()
         this.port = process.env.PORT
-
         this.conectarDB()
         
     }
@@ -26,7 +26,10 @@ class Server{
         this.app.use('/api', usuariosRoutes)
         this.app.use('/api',loginRoutes)
         this.app.use('/api', imagesRouter)
+        this.app.use('/api', imageDataRouter)
         this.app.use(express.static(path.join(__dirname,'public')));
+        this.app.use(express.static('images/uploads'));
+        this.app.use('/images', express.static(path.join(__dirname, 'images')));
     }
     middlewares(){
         this.app.use(cors())
@@ -34,7 +37,9 @@ class Server{
             //console.log('Body recibido:', req.body);
             next();
     })
-        this.app.use(express.static('public'))
+    //this.app.use(express.json());
+    this.app.use(express.urlencoded({ extended: true }));
+        //this.app.use(express.static('public'))
 
     }
     conectarDB(){

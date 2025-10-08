@@ -30,7 +30,7 @@ Content-Type: application/json
         "institution": "Un Super Usuario",
         "address": "Nowhere man 3",
         "activo": true,
-        "roles": "normalUser",
+        "roles": "superAdminRole",
         "nickname": "SUDO1"
 
     }

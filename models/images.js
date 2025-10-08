@@ -6,10 +6,13 @@ import path from "path"
 
 
 const imagesControler = {
-    getImages: async (id,skip, limit, page)=>{
-            const images = await Images.find({user:id}).skip(skip).limit(limit)
+    getImages: async (id,skip, limit, page, action)=>{
+            
+            const images = await Images.find({user:id, tipo:'uploadImage'}).skip(skip).limit(limit)
+            .catch(err=>console.log(err))
             const totalDocuments = await Images.countDocuments()
             if(images){
+                
                 return{
                     success: true,
                     images: images,
