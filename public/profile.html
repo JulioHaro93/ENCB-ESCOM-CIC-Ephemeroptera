@@ -1,143 +1,324 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil de Usuario</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="./styles/styles.css">>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil de Usuario</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; }
+  .profile-container { max-width: 1200px; margin: auto; padding: 20px; }
+  .profile-header { display: flex; align-items: center; gap: 15px; }
+  .profile-avatar { width: 60px; height: 60px; background: #666; border-radius: 50%; color: #fff; display:flex; justify-content:center; align-items:center; font-size:24px; }
+  .profile-info h2 { margin: 0; }
+  .files-container { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+  .upload-btn { margin: 15px 0; padding: 8px 12px; cursor: pointer; }
+  .back-btn { display:inline-block; margin-top:20px; text-decoration:none; color:#333; }
+  .detail-item { margin-bottom: 5px; }
+  .detail-label { font-weight: bold; }
+
+  /* Modal genérico */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    top: 0; left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  .modal-content {
+    position: relative;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    max-width: 90%;
+    max-height: 90%;
+    overflow: hidden;
+    padding: 20px;
+  }
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+  }
+  #imageModal .modal-content { display: flex; flex-wrap: wrap; }
+  #imageModal .modal-body { display: flex; flex-wrap: wrap; width: 100%; gap: 20px; }
+  #imageModal .modal-body img { flex:1 1 auto; max-width:60%; max-height:80vh; object-fit:contain; border-radius:8px; background:#f5f5f5; }
+  #imageInfo { flex:1 1 auto; min-width:200px; max-width:40%; padding:15px; }
+
+  #uploadModal .modal-content { max-width:400px; width:100%; display:flex; flex-direction:column; }
+  #metadataModal .modal-content { max-width:700px; width:90%; max-height:90vh; overflow-y:auto; display:flex; flex-direction:column; }
+  #metadataModal form { display:flex; flex-direction:column; }
+  #metadataModal label { margin-top:10px; font-weight:bold; }
+  #metadataModal input, #metadataModal textarea { margin-top:5px; padding:5px; font-size:1rem; }
+</style>
 </head>
 <body>
-  <div class="profile-container">
-    <div class="profile-header">
-      <div class="profile-avatar" id="profileAvatar">U</div>
-      <div class="profile-info">
-        <h2 id="profileName">Cargando...</h2>
-        <p id="profileEmail">---</p>
-        <span id="profileRole" class="role-badge"></span>
-      </div>
+
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar" id="profileAvatar">U</div>
+    <div class="profile-info">
+      <h2 id="profileName">Cargando...</h2>
+      <p id="profileEmail">---</p>
+      <span id="profileRole" class="role-badge"></span>
     </div>
-    
-    <div class="details" id="profileDetails"></div>
-
-    <h3>Archivos subidos:</h3>
-    <div id="profileFiles" class="files-container"></div>
-
-    <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Dashboard</a>
   </div>
 
-  <script>
-    const token = localStorage.getItem('authToken');
-    const params = new URLSearchParams(window.location.search);
-    const userId = params.get('id');
-    async function loadFiles() {
-        const token = localStorage.getItem('authToken');
-        const params = new URLSearchParams(window.location.search);
-        const userId = params.get('id');
-            const container = document.getElementById('profileFiles');
-            container.innerHTML = '';
-                console.log('Cargando archivos para el usuario:', userId);
-                console.log('Usando token:', token);
-       try {
-        const res = await fetch(`/api/images/userImages?user=${userId}&skip=0&limit=100`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
+  <div class="details" id="profileDetails"></div>
 
-        if (!res.ok) throw new Error('No se pudieron cargar los archivos');
+  <h3>Archivos subidos:</h3>
+  <div id="profileFiles" class="files-container"></div>
 
-        const data = await res.json();
-        const files = data.url?.images || [];
+  <button id="uploadBtn" class="upload-btn">Subir Imagen</button>
 
-        const container = document.getElementById('profileFiles');
-        if (!container) return;
-        container.innerHTML = '';
+  <!-- Modal Subida -->
+  <div id="uploadModal" class="modal">
+    <div class="modal-content">
+      <span id="closeUploadModal" class="close">&times;</span>
+      <h3>Subir imagen</h3>
+      <form id="uploadForm">
+        <input type="file" id="imageFile" name="image" accept="image/*" required />
+        <button type="submit">Subir</button>
+      </form>
+      <div id="uploadStatus"></div>
+    </div>
+  </div>
 
-        if (files.length === 0) {
-            container.innerHTML = `
-                <div class="placeholder">
-                    <img src="https://cdn-icons-png.flaticon.com/512/685/685352.png" 
-                         alt="Cámara genérica" style="width:50px;height:50px;margin-bottom:5px;">
-                    <span>El usuario no ha subido imágenes aún</span>
-                </div>
+  <!-- Modal Imagen -->
+  <div id="imageModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Imagen" />
+        <div id="imageInfo"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Metadata -->
+  <div id="metadataModal" class="modal">
+    <div class="modal-content">
+      <span id="closeMetadataModal" class="close">&times;</span>
+      <h3>Registrar datos de la imagen</h3>
+      <form id="metadataForm">
+        <input type="hidden" id="metadataImageId" name="image">
+
+        <label>Descripción:</label>
+        <textarea id="description" name="description"></textarea>
+
+        <label>Orden:</label>
+        <input type="text" id="order" name="order">
+
+        <label>Familia:</label>
+        <input type="text" id="fammily" name="fammily">
+
+        <label>Ubicación:</label>
+        <input type="text" id="location" name="location">
+
+        <label>Temporada:</label>
+        <input type="text" id="season" name="season">
+
+        <label>Recolector:</label>
+        <input type="text" id="recolector" name="recolector">
+
+        <label>Vegetación:</label>
+        <input type="text" id="vegetation" name="vegetation">
+
+        <label>Maduración:</label>
+        <input type="text" id="maduration" name="maduration">
+
+        <label>BMWP:</label>
+        <input type="text" id="bmwp" name="bmwp">
+
+        <button type="submit">Guardar</button>
+        <div id="metadataStatus"></div>
+      </form>
+    </div>
+  </div>
+
+  <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Dashboard</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('authToken');
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('id');
+
+  const container = document.getElementById('profileFiles');
+
+  const uploadBtn = document.getElementById('uploadBtn');
+  const uploadModal = document.getElementById('uploadModal');
+  const closeUploadModal = document.getElementById('closeUploadModal');
+  const uploadForm = document.getElementById('uploadForm');
+  const uploadStatus = document.getElementById('uploadStatus');
+
+  const metadataModal = document.getElementById('metadataModal');
+  const metadataForm = document.getElementById('metadataForm');
+  const metadataStatus = document.getElementById('metadataStatus');
+
+  const metadataImageId = document.getElementById('metadataImageId');
+  const descriptionInput = document.getElementById('description');
+  const orderInput = document.getElementById('order');
+  const familyInput = document.getElementById('fammily');
+  const locationInput = document.getElementById('location');
+  const seasonInput = document.getElementById('season');
+  const recolectorInput = document.getElementById('recolector');
+  const vegetationInput = document.getElementById('vegetation');
+  const madurationInput = document.getElementById('maduration');
+  const bmwpInput = document.getElementById('bmwp');
+
+  const closeModal = document.getElementById('closeModal');
+  const modalImage = document.getElementById('modalImage');
+  const imageInfo = document.getElementById('imageInfo');
+
+  // Modales
+  uploadBtn.onclick = () => uploadModal.style.display = 'flex';
+  closeUploadModal.onclick = () => uploadModal.style.display = 'none';
+  document.getElementById('closeMetadataModal').onclick = () => metadataModal.style.display = 'none';
+  closeModal.onclick = () => imageModal.style.display = 'none';
+  window.onclick = e => {
+    if(e.target === uploadModal) uploadModal.style.display = 'none';
+    if(e.target === metadataModal) metadataModal.style.display = 'none';
+    if(e.target === imageModal) imageModal.style.display = 'none';
+  };
+
+  // -------- Perfil --------
+  async function loadProfile() {
+    if(!userId) { document.body.innerHTML = '<p>No se proporcionó un ID de usuario.</p>'; return; }
+    try {
+      const res = await fetch(`/api/profile/${userId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      const user = data.user || data;
+
+      document.getElementById('profileAvatar').textContent = user.nombre ? user.nombre[0] : 'U';
+      document.getElementById('profileName').textContent = user.nombre || 'Usuario sin nombre';
+      document.getElementById('profileEmail').textContent = user.correo || 'Sin correo';
+      document.getElementById('profileRole').textContent = user.roles || 'Sin rol';
+
+      document.getElementById('profileDetails').innerHTML = `
+        <div class="detail-item"><span class="detail-label">Nickname:</span> ${user.nickname || 'N/A'}</div>
+        <div class="detail-item"><span class="detail-label">Institución:</span> ${user.institution || 'N/A'}</div>
+        <div class="detail-item"><span class="detail-label">Dirección:</span> ${user.address || 'N/A'}</div>
+        <div class="detail-item"><span class="detail-label">Estado:</span> ${user.activo ? 'Activo 🟢' : 'Inactivo 🔴'}</div>
+        <div class="detail-item"><span class="detail-label">Fecha de Registro:</span> ${new Date(user.registerDate).toLocaleDateString('es-ES')}</div>
+        <div class="detail-item"><span class="detail-label">ID:</span> ${user._id}</div>
+      `;
+    } catch(err) { console.error(err); }
+  }
+
+  // -------- Cargar imágenes --------
+  async function loadFiles() {
+    container.innerHTML = '';
+    try {
+      const res = await fetch(`/api/images/userImages?user=${userId}&skip=0&limit=100`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      const files = data.url?.images || [];
+
+      if(files.length === 0) { container.innerHTML = '<p>El usuario no ha subido imágenes aún</p>'; return; }
+
+      files.forEach(file => {
+        const url = '/' + file.url.replace(/\\/g, '/');
+        const img = document.createElement('img');
+        img.src = url;
+        img.dataset.id = file._id;
+        img.style.maxWidth = '200px';
+        img.style.margin = '5px';
+        container.appendChild(img);
+      });
+
+      container.querySelectorAll('img').forEach(img => {
+        img.onclick = async () => {
+          try {
+            const res = await fetch(`/api/imageData/${img.dataset.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const data = await res.json();
+            const imgData = data.imagenes?.imageData || data;
+
+            modalImage.src = img.src;
+            imageInfo.innerHTML = `
+              <p><strong>Descripción:</strong> ${imgData.description || ''}</p>
+              <p><strong>Orden:</strong> ${imgData.order || ''}</p>
+              <p><strong>Familia:</strong> ${imgData.fammily || ''}</p>
+              <p><strong>Ubicación:</strong> ${imgData.location || ''}</p>
+              <p><strong>Temporada:</strong> ${imgData.season || ''}</p>
             `;
-            return;
-        }
+            imageModal.style.display = 'flex';
+          } catch(err) { console.error(err); alert('Error al cargar la información'); }
+        };
+      });
+    } catch(err) { console.error(err); }
+  }
 
-        files.forEach(file => {
-            const url = '/' + file.url.replace(/\\/g, '/'); // normaliza la ruta
-            console.log('Archivo encontrado:', url, 'Tipo:', file.tipo);
-            const tipo = file.tipo;
+  uploadForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const fileInput = document.getElementById('imageFile');
+    if(!fileInput.files.length) return;
 
-            if (tipo === 'uploadImage') {
-                const img = document.createElement('img');
-                img.src = url;
-                img.alt = 'Imagen subida por el usuario';
-                img.style.maxWidth = '200px';
-                img.style.margin = '5px';
-                container.appendChild(img);
-            }
+    const formData = new FormData();
+    formData.append('image', fileInput.files[0]);
+    formData.append('user', userId);
 
-            // Si es video
-            if (tipo === 'uploadVideo') {
-                const video = document.createElement('video');
-                video.src = url;
-                video.controls = true;
-                video.style.maxWidth = '300px';
-                video.style.margin = '5px';
-                container.appendChild(video);
-            }
-        });
+    try {
+      uploadStatus.textContent = 'Subiendo...';
+      const res = await fetch('/api/images/uploadImage', { method:'POST', headers:{ 'Authorization': `Bearer ${token}` }, body:formData });
+      const resonse = await res.json();
+      if(!response.success) throw new Error('Error al subir imagen');
+      const result = await res.json();
 
-    } catch (error) {
-        console.error('Error cargando archivos:', error);
-        const container = document.getElementById('profileFiles');
-        if (container) container.innerHTML = `<p style="color:red;">Error al cargar archivos</p>`;
-    }
-}
-    async function loadProfile() {
-      if (!userId) {
-        document.body.innerHTML = '<p style="text-align:center;">No se proporcionó un ID de usuario.</p>';
-        return;
-      }
+      uploadStatus.textContent = 'Imagen subida';
+      uploadForm.reset();
 
-      try {
-        const res = await fetch(`/api/profile/${userId}`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
+      metadataImageId.value = result.result._id;
+      metadataModal.style.display = 'flex';
+    } catch(err) { console.error(err); uploadStatus.textContent = 'Error al subir imagen'; }
+  });
 
-        if (!res.ok) throw new Error('No se pudo cargar el perfil');
+  // -------- Guardar metadata --------
+  metadataForm.addEventListener('submit', async e => {
+    e.preventDefault();
+    const data = {
+      image: metadataImageId.value,
+      description: descriptionInput.value,
+      order: orderInput.value,
+      fammily: familyInput.value,
+      location: locationInput.value,
+      season: seasonInput.value,
+      recolector: recolectorInput.value,
+      user: userId,
+      vegetation: vegetationInput.value,
+      maduration: madurationInput.value,
+      bmwp: parseInt(bmwpInput.value) || 0
+    };
+    try {
+      metadataStatus.textContent = 'Guardando...';
+      const res = await fetch(`/api/imageData/createImageData/${data.image}`, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(data)
+      });
 
-        const data = await res.json();
-        const user = data.user || data;
+      const response = await res.json();
+      if(!response.success) throw new Error('Error al guardar metadata\n'+res);
+      metadataStatus.textContent = '¡Metadata guardada!';
+      metadataForm.reset();
+      metadataModal.style.display = 'none';
+      loadFiles();
+    } catch(err) { console.error(err); metadataStatus.textContent = 'Error al guardar metadata'; }
+  });
 
-        document.getElementById('profileAvatar').textContent = user.nombre ? user.nombre[0] : 'U';
-        document.getElementById('profileName').textContent = user.nombre || 'Usuario sin nombre';
-        document.getElementById('profileEmail').textContent = user.correo || 'Sin correo';
-        document.getElementById('profileRole').textContent = user.roles || 'Sin rol';
-
-        document.getElementById('profileDetails').innerHTML = `
-          <div class="detail-item"><span class="detail-label">Nickname:</span> <span class="detail-value">${user.nickname || 'N/A'}</span></div>
-          <div class="detail-item"><span class="detail-label">Institución:</span> <span class="detail-value">${user.institution || 'N/A'}</span></div>
-          <div class="detail-item"><span class="detail-label">Dirección:</span> <span class="detail-value">${user.address || 'N/A'}</span></div>
-          <div class="detail-item"><span class="detail-label">Estado:</span> 
-            <span class="detail-value">${user.activo ? 'Activo 🟢' : 'Inactivo 🔴'}</span>
-          </div>
-          <div class="detail-item"><span class="detail-label">Fecha de Registro:</span> 
-            <span class="detail-value">${new Date(user.registerDate).toLocaleDateString('es-ES')}</span>
-          </div>
-          <div class="detail-item"><span class="detail-label">ID:</span> <span class="detail-value">${user._id}</span></div>
-        `;
-
-      } catch (err) {
-        document.body.innerHTML = `<p style="text-align:center;color:red;">Error al cargar el perfil: ${err.message}</p>`;
-      }
-        loadFiles();
-    }
-
-    
-    loadProfile();
-  </script>
+  loadProfile();
+  loadFiles();
+});
+</script>
 </body>
 </html>

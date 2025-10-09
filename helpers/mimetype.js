@@ -10,12 +10,10 @@ const __dirname = path.dirname(__filename);
 const getMimeType = async (path) => {
   const buffer = fs.readFileSync(path)
   const type = await fileTypeFromBuffer(buffer)
-  console.log(type)
   return type.mime
 }
 
 const validateMimeType = async (mimeType) => {
-  console.log(mimeType)
   if (!mimeType) {
     return { valid: false, error: 'No se pudo determinar el tipo de archivo' }
   }

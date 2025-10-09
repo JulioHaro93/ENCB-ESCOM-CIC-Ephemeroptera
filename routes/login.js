@@ -8,7 +8,7 @@ const path = '/login'
 const router = Router();
 
 router.post(path,  async (req,res)=>{
-    //console.log(req.body)
+
     const {correo, password} = req.body
     const log = await users.logUser(correo, password, 'logs/create')
     if(log.user){
@@ -19,7 +19,7 @@ router.post(path,  async (req,res)=>{
             token: log.token
         })
     }else{
-        res.body={
+        res.status(400).body={
             success: false,
             httpStatus: 400,
             error: log

@@ -18,13 +18,12 @@ class Server{
         this.app = express()
         this.middlewares()
         this.routes()
-        this.port = process.env.PORT
+        this.port = process.env.PORT || 8080
         this.conectarDB()
-        
     }
     routes(){
-        this.app.use('/api', usuariosRoutes)
         this.app.use('/api',loginRoutes)
+        this.app.use('/api', usuariosRoutes)
         this.app.use('/api', imagesRouter)
         this.app.use('/api', imageDataRouter)
         this.app.use(express.static(path.join(__dirname,'public')));

@@ -1,0 +1,41 @@
+
+@baseUrl= http://localhost
+@port = 8080
+@token = {{login.response.body.token}}
+
+
+###
+# @name login
+POST {{baseUrl}}:{{port}}/api/login
+Content-Type: application/json
+
+{
+    "correo": "test@test.com",
+    "password":"123456"
+}
+
+###
+# @name getImagesProfile
+GET {{baseUrl}}:{{port}}/imageData/68a6bc31c6202226baf02312
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+###
+# @name createImageData
+POST {{baseUrl}}:{{port}}/api/imageData
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "image": "68a7900fefc3e9d0634dce3f",
+    "description": "Descripcion de la imagen",
+    "Order": "Coleoptera",
+    "fammily": "Chrysomelidae",
+    "location": "Ubicacion de la imagen",
+    "season": "Verano",
+    "recolector": "68a6bc31c6202226baf02312",
+    "user": "68a6bc31c6202226baf02312",
+    "vegetation": "Bosque perenifolio",
+    "maduration": "Adulto",
+    "bmwp": 5
+}

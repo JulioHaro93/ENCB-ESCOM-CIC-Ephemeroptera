@@ -3,7 +3,7 @@ import Images from "../db/images.js"
 import fs from "fs/promises"
 import copyAndRenameFile from '../helpers/images.js'
 import path from "path"
-
+import multer from 'multer'
 
 const imagesControler = {
     getImages: async (id,skip, limit, page, action)=>{
@@ -49,9 +49,7 @@ const imagesControler = {
         const validmime = await validateMimeType(mimeType)
         if(validmime.valid){
             const urlnew = await copyAndRenameFile(urlPre, url)
-            console.log(urlnew)
             if(urlnew.success){
-                console.log(urlnew)
                 const body ={
                     key: urlnew.key,
                     user: user.id,
@@ -119,9 +117,7 @@ const imagesControler = {
         const validmime = await validateMimeType(mimeType)
         if(validmime.valid){
             const urlnew = await copyAndRenameFile(urlPre, url)
-            console.log(urlnew)
             if(urlnew.success){
-                console.log(urlnew)
                 const body ={
                     key: urlnew.key,
                     user: user.id,
@@ -189,9 +185,7 @@ const imagesControler = {
         const validmime = await validateMimeType(mimeType)
         if(validmime.valid){
             const urlnew = await copyAndRenameFile(urlPre, url)
-            console.log(urlnew)
             if(urlnew.success){
-                console.log(urlnew)
                 const body ={
                     key: urlnew.key,
                     user: user.id,
