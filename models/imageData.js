@@ -21,8 +21,6 @@ const imagesControler = {
     createImageData: async (body, idImage,user) => {
 
         const image = await Images.findOne({ _id: idImage });
-        console.log("IMAGE IMAGE")
-        console.log(image)
         if (!image) {
             return {
                 success: false,
@@ -39,8 +37,6 @@ const imagesControler = {
         };
 
         const imageData = new ImageData(bodyData);
-        console.log("IMAGE DATA")
-        console.log(imageData)
 
         try {
 
