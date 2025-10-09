@@ -17,8 +17,9 @@ const imagesControler = {
             }
         }
     },
-    createImageData: async (action, idImage, user)=>{
+    createImageData: async (body, idImage)=>{
         const image = await Images.findOne({image:idImage})
+        console.log(image)
         if(image){
             const bodyData ={
                 image: idImage,
@@ -32,7 +33,7 @@ const imagesControler = {
                     error: 'bad request'
                 }
             }
-        const imageData = new ImageData(bodyData)
+        const imageData = new ImageData(body)
         const savedData = await imageData.save().catch(err=>console.log(err))
         if(savedData){
             return{
