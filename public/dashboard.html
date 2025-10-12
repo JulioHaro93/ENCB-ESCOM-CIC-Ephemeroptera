@@ -399,23 +399,28 @@
         <div class="dashboard">
             <div class="sidebar">
                 <h3>Navegación</h3>
-                <div class="nav-item active">
+                <div class="nav-item active" data-target="dashboard">
                     <i class="fas fa-users"></i>
                     <span>Usuarios</span>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" data-target="cnnephe">
                     <i class="fas fa-chart-bar"></i>
-                    <span>Estadísticas</span>
+                    <span>Evaluar Ephemeropteros</span>
                 </div>
-                <div class="nav-item">
+                <div class="nav-item" data-target="imagenes">
+                    <i class="fas fa-image"></i>
+                    <span>Imágenes</span>
+                </div>
+                <div class="nav-item" data-target="configuracion">
                     <i class="fas fa-cog"></i>
                     <span>Configuración</span>
                 </div>
-                <div class="nav-item" id="logoutBtn">
+                <div class="nav-item" id="logoutBtn" data-target="logout">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Cerrar Sesión</span>
                 </div>
-            </div>
+                <script src="js/navigation.js"></script>
+                </div>
             
             <div class="main-content">
                 <div class="filters">
@@ -508,105 +513,8 @@
                 // Simulamos la respuesta con los datos proporcionados
                 await new Promise(resolve => setTimeout(resolve, 1000));
                 
-                // Datos de ejemplo basados en la respuesta proporcionada
-                const mockResponse = {
-                    result: {
-                        success: true,
-                        users: [
-                            {
-                                "_id": "68a6484e4c72faee1225bf6f",
-                                "nombre": "AdminBueno",
-                                "correo": "Admin123@Admin.com",
-                                "activo": false,
-                                "google": false,
-                                "roles": "superAdminRole",
-                                "registerDate": "2025-08-20T22:12:23.127Z",
-                                "institution": "Developer",
-                                "address": "New street por ahí",
-                                "nickname": "AdminDev"
-                            },
-                            {
-                                "_id": "68a663836d89bd95fc2a4190",
-                                "nombre": "Usuario Genérico 1",
-                                "correo": "correo1@correo.com",
-                                "activo": true,
-                                "google": false,
-                                "roles": "normalUser",
-                                "registerDate": "2025-08-21T00:05:15.056Z",
-                                "institution": "usuario Común",
-                                "address": "Nowhere man",
-                                "nickname": "User1234"
-                            },
-                            {
-                                "_id": "68a66b910807dc47ec3bff94",
-                                "nombre": "Usuario Genérico 2",
-                                "correo": "correo3@correo.com",
-                                "activo": true,
-                                "google": false,
-                                "roles": "normalUser",
-                                "registerDate": "2025-08-21T00:42:01.206Z",
-                                "institution": "usuario Común",
-                                "address": "Nowhere man 2",
-                                "nickname": "User12345"
-                            },
-                            {
-                                "_id": "68a66ba10807dc47ec3bff98",
-                                "nombre": "AdminBueno",
-                                "correo": "Admonmon@Admin.com",
-                                "activo": false,
-                                "google": false,
-                                "roles": "noRole",
-                                "registerDate": "2025-08-21T00:42:01.206Z",
-                                "institution": "Developer",
-                                "address": "New street por ahí",
-                                "nickname": "AdminDeveloper"
-                            },
-                            {
-                                "_id": "68a6bc31c6202226baf02312",
-                                "nombre": "Super Usuario",
-                                "correo": "test@test.com",
-                                "activo": true,
-                                "google": false,
-                                "roles": "superAdminRole",
-                                "registerDate": "2025-08-21T06:24:43.115Z",
-                                "institution": "Un Super Usuario",
-                                "address": "Nowhere man 2",
-                                "nickname": "SUDO1"
-                            },
-                            {
-                                "_id": "68a77d9ec3dd0e91b1a15d89",
-                                "nombre": "Super Usuario 2",
-                                "correo": "admin2@admin2.com",
-                                "activo": true,
-                                "google": false,
-                                "roles": "superAdminRole",
-                                "registerDate": "2025-08-21T20:06:30.652Z",
-                                "institution": "Un Super Usuario",
-                                "address": "Nowhere man 2",
-                                "nickname": "SUDO2"
-                            },
-                            {
-                                "_id": "68a7813ccd711fd59f110c30",
-                                "nombre": "Super Usuario 5",
-                                "correo": "admin2@admin5.com",
-                                "activo": true,
-                                "google": false,
-                                "roles": "superAdminRole",
-                                "registerDate": "2025-08-21T20:23:30.563Z",
-                                "institution": "Un Super Usuario",
-                                "address": "Nowhere man 2",
-                                "nickname": "SUDO6"
-                            }
-                        ],
-                        "page": 1,
-                        "limit": 20,
-                        "totalDocuments": 7,
-                        "totalPages": 1
-                    }
-                };
-                
                 // En un caso real, descomentar esto:
-                /*
+                
                 const response = await fetch(`/api/SeeUsers?page=${page}&limit=${limit}`, {
                     method: 'GET',
                     headers: {
@@ -628,7 +536,7 @@
                 
                 const data = await response.json();
                 return data.result;
-                */
+                
                 
                 return mockResponse.result;
                 

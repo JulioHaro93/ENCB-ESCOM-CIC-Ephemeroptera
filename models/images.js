@@ -3,7 +3,7 @@ import Images from "../db/images.js"
 import fs from "fs/promises"
 import copyAndRenameFile from '../helpers/images.js'
 import path from "path"
-import multer from 'multer'
+
 
 const imagesControler = {
     getImages: async (id,skip, limit, page, action)=>{

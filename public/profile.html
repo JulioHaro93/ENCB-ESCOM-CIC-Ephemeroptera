@@ -239,24 +239,56 @@ document.addEventListener('DOMContentLoaded', () => {
 
       container.querySelectorAll('img').forEach(img => {
         img.onclick = async () => {
+          const dataSave = {
+            description: 'Sin Datos',
+            order: 'Sin Datos',
+            family: 'Sin Datos',
+            location: 'Sin Datos',
+            season: 'Sin Datos'
+          };
+          console.log('dataSave', dataSave);
           try {
-            const res = await fetch(`/api/imageData/${img.dataset.id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+            const res = await fetch(`/api/imageData/${img.dataset.id}`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
             const data = await res.json();
             const imgData = data.imagenes?.imageData || data;
 
             modalImage.src = img.src;
             imageInfo.innerHTML = `
-              <p><strong>Descripción:</strong> ${imgData.description || ''}</p>
-              <p><strong>Orden:</strong> ${imgData.order || ''}</p>
-              <p><strong>Familia:</strong> ${imgData.fammily || ''}</p>
-              <p><strong>Ubicación:</strong> ${imgData.location || ''}</p>
-              <p><strong>Temporada:</strong> ${imgData.season || ''}</p>
+              <p><strong>Descripción:</strong> ${imgData.description || dataSave.description}</p>
+              <p><strong>Orden:</strong> ${imgData.order || dataSave.order}</p>
+              <p><strong>Familia:</strong> ${imgData.family || dataSave.family}</p>
+              <p><strong>Ubicación:</strong> ${imgData.location || dataSave.location}</p>
+              <p><strong>Temporada:</strong> ${imgData.season || dataSave.season}</p>
             `;
             imageModal.style.display = 'flex';
-          } catch(err) { console.error(err); alert('Error al cargar la información'); }
+          } catch(err) { 
+            console.error('Error en fetch o renderización:', err);
+            modalImage.src = img.src;
+            imageInfo.innerHTML = `
+              <p><strong>Descripción:</strong> ${dataSave.description}</p>
+              <p><strong>Orden:</strong> ${dataSave.order}</p>
+              <p><strong>Familia:</strong> ${dataSave.family}</p>
+              <p><strong>Ubicación:</strong> ${dataSave.location}</p>
+              <p><strong>Temporada:</strong> ${dataSave.season}</p>
+            `;
+            imageModal.style.display = 'flex';
+          }
         };
       });
-    } catch(err) { console.error(err); }
+    } catch(err) { console.error(err); 
+      modalImage.src = img.src;
+            imageInfo.innerHTML = `
+              <p><strong>Descripción:</strong> ${dataSave.description}</p>
+              <p><strong>Orden:</strong> ${dataSave.order}</p>
+              <p><strong>Familia:</strong> ${dataSave.family}</p>
+              <p><strong>Ubicación:</strong> ${dataSave.location}</p>
+              <p><strong>Temporada:</strong> ${dataSave.season}</p>
+            `;
+            imageModal.style.display = 'flex';
+     }
+
   }
 
   uploadForm.addEventListener('submit', async e => {

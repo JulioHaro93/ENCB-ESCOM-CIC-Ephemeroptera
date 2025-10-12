@@ -18,7 +18,7 @@ class Server{
         this.app = express()
         this.middlewares()
         this.routes()
-        this.port = process.env.PORT || 8080
+        this.port = process.env.PORT || 9090
         this.conectarDB()
     }
     routes(){

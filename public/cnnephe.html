@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Evaluar Ephemeroptera</title>
+  <link rel="stylesheet" href="./styles/styles.css">
+  <script src="js/cnnephe.js" defer></script>
+</head>
+<body>
+  <h1>Evaluación de fotografías de organismos del Orden Ephemeroptera</h1>
+
+  <a href="dashboard.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Dashboard</a>
+
+  <div class="upload-container">
+    <h2>Subir imagen para evaluación</h2>
+    <form id="uploadForm">
+      <label for="imageUpload">Seleccionar imagen:</label>
+      <input type="file" id="imageUpload" name="image" accept="image/*" required>
+
+      <label for="description">Descripción:</label>
+      <input type="text" id="description" name="description" placeholder="Descripción breve (opcional)">
+
+      <button type="submit" class="upload-btn">Subir imagen</button>
+    </form>
+
+    <div id="uploadResult" class="result"></div>
+  </div>
+</body>
+</html>
