@@ -1,2 +1,2 @@
-# xdeveloptest
+# API para ejecutar una red neuronal convolucional para efemeropteros
 Para ejecutar independientemente de la versión de node, es necesario usar nvm y npx nodemon app o npx start app, para que no dependa de la versión de node y esas versiones no sean problema si no son variables globales del sistema por su versión.
