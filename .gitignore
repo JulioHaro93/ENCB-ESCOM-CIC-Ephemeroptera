@@ -7,3 +7,6 @@ backend/Resumen de la API.pdf
 backend/Resumen de la API.docx
 backend/ChannelAuthBase
 backend/.gitignore
+frontend/node_modules
+frontend/.gitignore
+frontend/package-lock.json
