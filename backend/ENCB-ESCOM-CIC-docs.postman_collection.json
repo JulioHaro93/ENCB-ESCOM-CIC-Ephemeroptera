@@ -1,0 +1,248 @@
+{
+	"info": {
+		"_postman_id": "313d5986-203a-4acb-84c4-03b1bdb19070",
+		"name": "ENCB-ESCOM-CIC-docs",
+		"description": "API con manejo de archivos para subir y registrar colecciones de imágenes y archivos de reporte.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20215384"
+	},
+	"item": [
+		{
+			"name": "Obtener usuarios",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Log in usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"correo\": \"test@test.com\",\r\n    \"password\":\"123456\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Crear usuario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"nombre\": \"Super Usuario 2\",\r\n        \"correo\": \"admin2@admin2.com\", //unique\r\n        \"password\": \"123456\",\r\n        \"institution\": \"Un Super Usuario\",\r\n        \"address\": \"Nowhere man 2\",\r\n        \"activo\": true,\r\n        \"roles\": \"superAdminRole\",\r\n        \"nickname\": \"SUDO2\" //unique\r\n\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/createANewUser",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"createANewUser"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener perfil de un usuario",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "New Request",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTZiYzMxYzYyMDIyMjZiYWYwMjMxMiIsImNvcnJlbyI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6InN1cGVyQWRtaW5Sb2xlIiwiaWF0IjoxNzU1ODA2OTAxLCJleHAiOjE3NTU4MTA1MDF9.BzNktqA57FhMrIvGiqsYpE8nVrNwX1EizklY4TPd-Js",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/userModifyprofile/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"userModifyprofile",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Invalidar usuario (banear)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTZiYzMxYzYyMDIyMjZiYWYwMjMxMiIsImNvcnJlbyI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6InN1cGVyQWRtaW5Sb2xlIiwiaWF0IjoxNzU1ODA2OTAxLCJleHAiOjE3NTU4MTA1MDF9.BzNktqA57FhMrIvGiqsYpE8nVrNwX1EizklY4TPd-Js",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/unactiveUser/68a66ba10807dc47ec3bff98",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"unactiveUser",
+						"68a66ba10807dc47ec3bff98"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar usuario",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTZiYzMxYzYyMDIyMjZiYWYwMjMxMiIsImNvcnJlbyI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6InN1cGVyQWRtaW5Sb2xlIiwiaWF0IjoxNzU1ODA2OTAxLCJleHAiOjE3NTU4MTA1MDF9.BzNktqA57FhMrIvGiqsYpE8nVrNwX1EizklY4TPd-Js",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/deleteUser/68a7812ecd711fd59f110c2d",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"deleteUser",
+						"68a7812ecd711fd59f110c2d"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Obtener imágenes de un usuario",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "Subir imágen de perfil",
+			"request": {
+				"method": "POST",
+				"header": []
+			},
+			"response": []
+		},
+		{
+			"name": "subir imagen",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/images/uploadProfileImage/perro1.jpeg",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"images",
+						"uploadProfileImage",
+						"perro1.jpeg"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Subir pdf",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4YTZiYzMxYzYyMDIyMjZiYWYwMjMxMiIsImNvcnJlbyI6InRlc3RAdGVzdC5jb20iLCJyb2xlcyI6InN1cGVyQWRtaW5Sb2xlIiwiaWF0IjoxNzU1ODA4MzcwLCJleHAiOjE3NTY0MTMxNzB9.WABfnVSAndWrbqdZfxiQuhz4IHTY_sFrY-lNydR7SZU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/images/uploaddoc/pdf1.pdf",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"images",
+						"uploaddoc",
+						"pdf1.pdf"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

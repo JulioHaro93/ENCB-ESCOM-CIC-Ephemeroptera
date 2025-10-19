@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perfil de Usuario - Carrusel</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f6f8; }
+.profile-container { max-width:1100px; margin:30px auto; padding:20px; background:#fff; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,0.06); }
+.profile-header { display:flex; gap:12px; align-items:center; }
+.profile-avatar { width:56px; height:56px; border-radius:50%; background:#666; color:#fff; display:flex; align-items:center; justify-content:center; font-size:20px; }
+.files-container { display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+.files-container img { width:150px; height:150px; object-fit:cover; border-radius:6px; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+
+button { cursor:pointer; }
+
+#uploadBtn { margin:15px 0; padding:8px 14px; border:none; border-radius:6px; background:#0d6efd; color:white; font-weight:600; }
+
+#loadMore { margin:12px 0; padding:8px 14px; border:none; border-radius:6px; background:#6c757d; color:white; font-weight:600; }
+
+.modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:2000; align-items:center; justify-content:center; }
+
+.modal-content { background:#fff; border-radius:8px; padding:20px; max-width:90%; max-height:90%; overflow:auto; display:flex; flex-direction:column; gap:12px; }
+
+.modal-header { display:flex; justify-content:space-between; align-items:center; }
+.modal-close { font-size:28px; cursor:pointer; color:#333; }
+
+#imageCarousel .carousel-body { display:flex; gap:12px; align-items:flex-start; }
+#carouselImage { max-width:60%; max-height:70vh; border-radius:8px; background:#fff; object-fit:contain; }
+#carouselMetadata { flex:1; display:flex; flex-direction:column; gap:6px; }
+
+.meta-field label { font-weight:bold; display:block; margin-bottom:4px; }
+.meta-field input, .meta-field textarea { width:100%; padding:6px; font-size:1rem; border-radius:4px; border:1px solid #ccc; }
+
+.actions { display:flex; gap:8px; margin-top:10px; justify-content:flex-end; }
+.btn { padding:6px 12px; border-radius:6px; border:none; font-weight:600; }
+.btn-edit { background:#0d6efd; color:#fff; }
+.btn-save { background:#198754; color:#fff; }
+.btn-delete { background:#dc3545; color:#fff; }
+
+.carousel-controls { display:flex; flex-direction:column; gap:8px; align-items:center; }
+.nav-btn { font-size:28px; color:#fff; background:none; border:none; user-select:none; }
+
+</style>
+</head>
+<body>
+
+<div class="profile-container">
+  <div class="profile-header">
+    <div class="profile-avatar" id="profileAvatar">U</div>
+    <div>
+      <h2 id="profileName">Cargando...</h2>
+      <div><small id="profileEmail">---</small> · <small id="profileRole">---</small></div>
+    </div>
+  </div>
+  <div id="profileDetails" style="margin-top:12px;"></div>
+
+  <button id="uploadBtn">Subir Imagen</button>
+  <h3 style="margin-top:18px;">Archivos subidos</h3>
+  <div id="profileFiles" class="files-container"></div>
+  <button id="loadMore">Cargar más</button>
+</div>
+
+<!-- Modal Subida -->
+<div id="uploadModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Subir imagen</h3>
+      <span class="modal-close" id="closeUploadModal">&times;</span>
+    </div>
+    <form id="uploadForm">
+      <input type="file" id="imageFile" name="image" accept="image/*" required>
+      <button type="submit" class="btn btn-save">Subir</button>
+    </form>
+    <div id="uploadStatus"></div>
+  </div>
+</div>
+
+<!-- Modal Carrusel -->
+<div id="imageCarousel" class="modal">
+  <div class="modal-header">
+    <h3>Imagen</h3>
+    <span class="modal-close" id="closeCarousel">&times;</span>
+  </div>
+  <div class="carousel-body">
+    <div class="carousel-controls">
+      <button id="prevBtn" class="nav-btn">&#10094;</button>
+    </div>
+    <img id="carouselImage" src="" alt="Imagen del usuario">
+    <div id="carouselMetadata">
+      <!-- metadata se injecta aquí -->
+    </div>
+    <div class="carousel-controls">
+      <button id="nextBtn" class="nav-btn">&#10095;</button>
+    </div>
+  </div>
+  <div class="actions">
+    <button id="editMeta" class="btn btn-edit">Editar</button>
+    <button id="saveMeta" class="btn btn-save">Guardar</button>
+    <button id="deleteImg" class="btn btn-delete">Borrar</button>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('authToken');
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('id');
+  if (!userId) return alert('No se proporcionó ID de usuario');
+
+  // Elementos
+  const profileAvatar = document.getElementById('profileAvatar');
+  const profileName = document.getElementById('profileName');
+  const profileEmail = document.getElementById('profileEmail');
+  const profileRole = document.getElementById('profileRole');
+  const profileDetails = document.getElementById('profileDetails');
+  const filesContainer = document.getElementById('profileFiles');
+  const loadMoreBtn = document.getElementById('loadMore');
+
+  const uploadBtn = document.getElementById('uploadBtn');
+  const uploadModal = document.getElementById('uploadModal');
+  const closeUploadModal = document.getElementById('closeUploadModal');
+  const uploadForm = document.getElementById('uploadForm');
+  const imageFile = document.getElementById('imageFile');
+  const uploadStatus = document.getElementById('uploadStatus');
+
+  const carousel = document.getElementById('imageCarousel');
+  const carouselImg = document.getElementById('carouselImage');
+  const carouselMetadata = document.getElementById('carouselMetadata');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const closeCarousel = document.getElementById('closeCarousel');
+  const editMeta = document.getElementById('editMeta');
+  const saveMeta = document.getElementById('saveMeta');
+  const deleteImg = document.getElementById('deleteImg');
+
+  let images = [];
+  let currentIndex = 0;
+  let skip = 0;
+  const limit = 10;
+  let allLoaded = false;
+  let currentMeta = {};
+  let editing = false;
+
+  async function loadProfile() {
+    try {
+      const res = await fetch(`/api/profile/${userId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+      const data = await res.json();
+      const user = data.user || data;
+      profileAvatar.textContent = user.nombre ? user.nombre[0] : 'U';
+      profileName.textContent = user.nombre || 'Usuario sin nombre';
+      profileEmail.textContent = user.correo || 'Sin correo';
+      profileRole.textContent = user.roles || 'Sin rol';
+
+      profileDetails.innerHTML = `
+        <div>Nickname: ${user.nickname || 'N/A'}</div>
+        <div>Institución: ${user.institution || 'N/A'}</div>
+        <div>Dirección: ${user.address || 'N/A'}</div>
+        <div>Estado: ${user.activo ? 'Activo 🟢' : 'Inactivo 🔴'}</div>
+        <div>Registro: ${new Date(user.registerDate).toLocaleDateString()}</div>
+        <div>ID: ${user._id}</div>
+      `;
+    } catch(err) { console.error(err); }
+  }
+
+  async function loadImages() {
+    if (allLoaded) return;
+    loadMoreBtn.textContent = "Cargando...";
+    try {
+      const res = await fetch(`/api/images/userImages?user=${userId}&skip=${skip}&limit=${limit}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      const newImages = data.url?.images.map(f => ({
+        _id: f._id,
+        url: '/' + f.url.replace(/\\/g,'/')
+      })) || [];
+      if (newImages.length < limit) allLoaded = true;
+      images = images.concat(newImages);
+      skip += limit;
+      renderImages();
+      loadMoreBtn.textContent = allLoaded ? "No hay más imágenes" : "Cargar más";
+    } catch(err) { console.error(err); loadMoreBtn.textContent="Error"; }
+  }
+
+  function renderImages() {
+    filesContainer.innerHTML = "";
+    images.forEach((img,i)=>{
+      const el = document.createElement('img');
+      el.src = img.url;
+      el.onclick = ()=>openCarousel(i);
+      filesContainer.appendChild(el);
+    });
+  }
+
+  async function openCarousel(index) {
+    currentIndex = index;
+    carousel.style.display = 'flex';
+    carouselImg.src = images[index].url;
+    await loadMetadata(images[index]._id);
+  }
+
+  async function loadMetadata(imageId) {
+    try {
+      const res = await fetch(`/api/imageData/${imageId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+      if (res.ok) {
+        const data = await res.json();
+        currentMeta = data.imagen || {};
+      } else currentMeta = {};
+      showMetadata();
+    } catch(err) { console.error(err); currentMeta={}; showMetadata(); }
+  }
+
+  function showMetadata(editMode=false){
+    editing = editMode;
+    carouselMetadata.innerHTML = "";
+    const fields=["description","order","family","location","season"];
+    fields.forEach(f=>{
+      const div=document.createElement('div'); div.className="meta-field";
+      const label=document.createElement('label'); label.textContent=f.charAt(0).toUpperCase()+f.slice(1);
+      const input=f==="description"?document.createElement('textarea'):document.createElement('input');
+      input.value=currentMeta[f]||"";
+      input.disabled=!editMode;
+      input.id=`meta-${f}`;
+      div.append(label,input); carouselMetadata.appendChild(div);
+    });
+    editMeta.style.display = editMode?"none":"inline-block";
+    saveMeta.style.display = editMode?"inline-block":"none";
+  }
+
+  editMeta.onclick = ()=>showMetadata(true);
+
+  saveMeta.onclick = async ()=>{
+    const fields=["description","order","family","location","season"];
+    const updated={}; fields.forEach(f=>updated[f]=document.getElementById(`meta-${f}`).value);
+    try{
+      const res=await fetch(`/api/imageData/createImageData/${images[currentIndex]._id}`, {
+        method:'POST',
+        headers:{ 'Authorization': `Bearer ${token}`, 'Content-Type':'application/json' },
+        body: JSON.stringify({...updated, user:userId})
+      });
+      if(!res.ok) throw new Error("Error guardando");
+      currentMeta = updated; showMetadata(false); alert("Metadata guardada ✅");
+    } catch(err){ console.error(err); alert("Error guardando metadata ❌"); }
+  };
+
+  deleteImg.onclick = async ()=>{
+    if(!confirm("¿Eliminar imagen?")) return;
+    try{
+      const id = images[currentIndex]._id;
+      const res = await fetch(`/api/images/deleteImage/${id}`, { method:'DELETE', headers:{'Authorization':`Bearer ${token}`} });
+      if(!res.ok) throw new Error("Error al borrar");
+      images.splice(currentIndex,1);
+      carousel.style.display='none';
+      renderImages();
+    } catch(err){ console.error(err); alert("No se pudo borrar ❌"); }
+  };
+
+  prevBtn.onclick = ()=>{ currentIndex=(currentIndex-1+images.length)%images.length; openCarousel(currentIndex); };
+  nextBtn.onclick = ()=>{ currentIndex=(currentIndex+1)%images.length; openCarousel(currentIndex); };
+  closeCarousel.onclick = ()=>carousel.style.display='none';
+
+  // Upload
+  uploadBtn.onclick = ()=>uploadModal.style.display='flex';
+  closeUploadModal.onclick = ()=>uploadModal.style.display='none';
+
+  uploadForm.addEventListener('submit', async e=>{
+    e.preventDefault();
+    if(!imageFile.files.length) return;
+    const formData = new FormData(); formData.append('image', imageFile.files[0]); formData.append('user', userId);
+    try{
+      uploadStatus.textContent="Subiendo...";
+      const res = await fetch('/api/images/uploadImage',{ method:'POST', headers:{'Authorization':`Bearer ${token}`}, body:formData});
+      if(!res.ok) throw new Error("Error subir imagen");
+      const result = await res.json();
+      uploadStatus.textContent="Imagen subida ✅";
+      imageFile.value=""; uploadModal.style.display='none';
+      images.unshift({ _id: result.result._id, url:'/'+result.result.url.replace(/\\/g,'/') });
+      renderImages();
+    } catch(err){ console.error(err); uploadStatus.textContent="Error al subir ❌"; }
+  });
+
+  loadMoreBtn.onclick = loadImages;
+
+  // Inicial
+  loadProfile();
+  loadImages();
+});
+</script>
+</body>
+</html>
+

@@ -1,0 +1,10 @@
+*{
+    background-color:#2154FC;
+}
+
+.users-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: flex-start;
+}

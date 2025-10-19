@@ -1,6 +1,9 @@
-credenciales.txt
-.envs/.env
-package-lock.json
-node_modules
-CNN/ResNet50_c5_bordes.h5
-CNN/ResNet50_c5_color.h5
+backend/.envs
+backend/images
+backend/node_modules
+backend/Dockerfile
+backend/package-lock.json
+backend/Resumen de la API.pdf
+backend/Resumen de la API.docx
+backend/ChannelAuthBase
+backend/.gitignore
