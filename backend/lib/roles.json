@@ -14,7 +14,8 @@
             "uploaddoc",
             "createImageData",
             "getImageData",
-            "uploadGridFs"
+            "uploadGridFs",
+            "getImages"
             ]
     },
     "adminRole": {
@@ -36,8 +37,10 @@
             "createImageData",
             "uploaddoc",
             "uploadVideo",
-        "getImageData",
-    "uploadGridFs"]
+            "getImageData",
+            "uploadGridFs",
+            "getImages"
+        ]
     },
     "normalUser":{
         "total": false,
@@ -53,7 +56,8 @@
             "uploaddoc",
             "uploadVideo",
             "getImageData",
-            "uploadGridFs"
+            "uploadGridFs",
+            "getImages"
         ]
     },
     "noRoles":{

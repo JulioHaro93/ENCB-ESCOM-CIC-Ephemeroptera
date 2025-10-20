@@ -9,7 +9,7 @@ const createImageURL = Joi.object().keys({
 })
 
 const uploadPhoto = Joi.object().keys({
-    key: Joi.string()
+    fileId: Joi.string(),
 })
 
 const imgId= Joi.object().keys({

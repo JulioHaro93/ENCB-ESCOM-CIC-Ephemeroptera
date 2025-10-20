@@ -6,6 +6,7 @@ import ImageCard from './ImageCard';
 import ImageCarousel from './ImageCarousel';
 import UploadForm from './UploadForm';
 import { getToken } from '../utils/auth';
+import {useNavigate} from 'react-router-dom'
 
 export default function Profile() {
   const { id } = useParams();
@@ -14,17 +15,24 @@ export default function Profile() {
   const [carouselIndex, setCarouselIndex] = useState(null);
   const [loading, setLoading] = useState(true);
   const token = getToken()
+  const navigate = useNavigate()
+  
+  const handleGoDashboard = () => {
+        navigate('/dashboard');
+      }
   useEffect(() => {
+
     
     const fetchData = async () => {
+      
       try {
         const userRes = await axios.get(`http://localhost:8080/api/profile/${id}`, {
           headers:{ Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },          
         }
         );
         setUser(userRes.data);
-        const imgs = await getImages(id, 0, 10);
-        console.log(imgs)
+        console.log(userRes)
+        const imgs = await getImages(userRes.data.images, id, 0, 10);
         setImages(imgs || []);
       } catch (err) {
         console.error(err);
@@ -55,10 +63,11 @@ export default function Profile() {
         <>
           {user ? (
             <div className="user-info">
-              <h2>{user.nombre}</h2>
+              <h2 color='black'>{user.nombre}</h2>
               <p>Email: {user.correo}</p>
               <p>Rol: {user.roles}</p>
               <p>Institución: {user.institution}</p>
+              <p>Perfil: {user.skill}</p>
             </div>
           ) : (
             <p>No se pudo cargar la información del usuario</p>
@@ -70,6 +79,15 @@ export default function Profile() {
             <p>El usuario no ha subido imágenes aún</p>
           ) : (
             <div className="images-grid">
+              {images.map((img, i) => (
+                  <img
+                    key={i}
+                    src={img}
+                    alt={`Imagen ${i}`}
+                    style={{ width: "200px", height: "200px", objectFit: "cover" }}
+                  />
+                ))}
+
               {images.map((img) => (
                 <ImageCard key={img._id} image={img} onClick={openCarousel} />
               ))}
@@ -86,6 +104,7 @@ export default function Profile() {
           )}
         </>
       )}
+      <button onClick={handleGoDashboard}>Volver al Dashboard de usuarios</button>
     </div>
   );
 }

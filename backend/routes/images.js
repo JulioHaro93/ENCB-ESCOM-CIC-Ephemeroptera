@@ -14,6 +14,48 @@ import {uploadGridFS} from '../helpers/gridFfs.js'
 const storageMemory = multer.memoryStorage();
 const upload = multer({ storage: storageMemory }).single('file');
 
+router.get(`${pathh}/userImagesGridFS/:fileId`,autenticateToken, async (req, res)=>{
+    console.log("userImagesGridFS: Obtener imágenes del un usuario.")
+    const fileId = req.params.fileId;
+    console.log(fileId,'\n')
+    const skip = parseInt(req.query.skip) || 0
+    const limit = parseInt(req.query.limit) || 10
+    const action = 'getImages'
+    //const validRole = checkRoles(user, action)
+    //const validAuto = checkAutoProfile(user, user.id)
+    const validationResult = uploadPhoto.validate({fileId})
+    if(validationResult){
+        try{
+         const downloadStream = await imagesControler.getImageStream(fileId);
+        if (!downloadStream) {
+            return res.status(404).json({
+            success: false,
+            message: "No se pudo recuperar el archivo"
+            });
+        }
+
+        res.set("Content-Type", "image/jpeg");
+
+        downloadStream.on("error", (err) => {
+            console.error("Error en stream:", err);
+            res.status(500).json({
+            success: false,
+            message: "Error al transmitir el archivo",
+            error: err.message
+            });
+        });
+
+        downloadStream.pipe(res);
+        } catch (err) {
+        console.error("Error en /userImagesGridFS:", err);
+        res.status(500).json({
+            success: false,
+            message: "Error interno al obtener el archivo",
+            error: err.message
+        });
+        }
+    }})
+
 
 router.get(`${pathh}/userImages/:userId`, autenticateToken, async (req,res)=>{
     const query = req.query

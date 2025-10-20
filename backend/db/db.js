@@ -6,7 +6,6 @@ const dbConnection = async()=>{
             useNewUrlParser: true,
             useUnifiedTopology: true,
         })
-        console.log(process.env.MONGODB_URI)
         console.log("Conectado a la base de datos")
     }catch(error){
         console.log("No fue posible conectar con la base de datos online")
