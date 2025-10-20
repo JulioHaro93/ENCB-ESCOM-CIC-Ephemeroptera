@@ -1,4 +1,5 @@
 import {Router} from 'express';
+import mongoose from 'mongoose';
 import imagesControler from '../models/images.js'
 import { uploadPhoto, createImageURL, imgId} from '../schemas/images.js'
 import autenticateToken from '../middleware/login.js'
@@ -8,17 +9,10 @@ import checkRoles from '../helpers/checkRoles.js'
 const router = Router()
 import multer from 'multer'
 import path from 'path'
-const storage = multer.diskStorage({
+import {uploadGridFS} from '../helpers/gridFfs.js'
 
-  destination: function (req, file, cb) {
-    cb(null, path.join('images', 'uploads'));
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
-})
-
-const upload = multer({ storage })
+const storageMemory = multer.memoryStorage();
+const upload = multer({ storage: storageMemory }).single('file');
 
 
 router.get(`${pathh}/userImages/:userId`, autenticateToken, async (req,res)=>{
@@ -78,7 +72,7 @@ router.post(`${pathh}/uploadProfileImage`, autenticateToken, async (req,res)=>{
 
 })
 
-router.post(`${pathh}/uploadImage`, autenticateToken, upload.single('image'), async (req,res)=>{
+router.post(`${pathh}/uploadImage`, autenticateToken, upload, async (req,res)=>{
 
     const key = req.file.filename
     const action ='uploadImage'
@@ -137,8 +131,38 @@ router.post(`${pathh}/uploaddoc/:key`, autenticateToken, async (req,res)=>{
 
 })
 
+router.post(`${pathh}/uploadGridFS/:id`, autenticateToken,upload, async (req, res) => {
+    const action ='uploadGridFs'
+    const user = req.params.id
+    const file = req.file
+    //
+    const validRole = checkRoles(user, action)
+    const validAuto = checkAutoProfile(user, user.id)
+    const validationResult = uploadPhoto.validate({user})
+    console.log(user)
+    const result = await imagesControler.uploadToGridFS(file, user, action)
+    res.json(result)
+})
 
 
 
+router.get(`${pathh}/gridfs/:id`, async (req, res) => {
+  try {
+    const conn = mongoose.connection
+    const bucket = new mongoose.mongo.GridFSBucket(conn.db, { bucketName: 'uploads' })
+    const fileId = new mongoose.Types.ObjectId(req.params.id)
+
+    const files = await bucket.find({ _id: fileId }).toArray()
+    if (!files || files.length === 0) {
+      return res.status(404).json({ error: 'Archivo no encontrado' })
+    }
+
+    res.set('Content-Type', files[0].contentType)
+    bucket.openDownloadStream(fileId).pipe(res)
+  } catch (err) {
+    console.error(err)
+    res.status(500).json({ error: 'Error al obtener la imagen' })
+  }
+})
 
 export default router

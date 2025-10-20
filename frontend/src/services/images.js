@@ -16,11 +16,9 @@ export const uploadImage = async (userId, file, metadata) => {
   const formData = new FormData();
   formData.append('file', file);
   formData.append('metadata', JSON.stringify(metadata));
-    
-  const res = await axios.post(`${API_URL}/images/${userId}`, formData, {
+  const res = await axios.post(`${API_URL}/images/uploadGridFS/${userId}`, formData, {
     headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },
   });
-  console.log(res)
   return res.data;
 };
 

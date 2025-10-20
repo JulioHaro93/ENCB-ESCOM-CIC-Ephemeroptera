@@ -13,7 +13,8 @@
             "reportUser",
             "uploaddoc",
             "createImageData",
-            "getImageData"
+            "getImageData",
+            "uploadGridFs"
             ]
     },
     "adminRole": {
@@ -35,7 +36,8 @@
             "createImageData",
             "uploaddoc",
             "uploadVideo",
-        "getImageData"]
+        "getImageData",
+    "uploadGridFs"]
     },
     "normalUser":{
         "total": false,
@@ -50,7 +52,8 @@
             "createImageData",
             "uploaddoc",
             "uploadVideo",
-            "getImageData"
+            "getImageData",
+            "uploadGridFs"
         ]
     },
     "noRoles":{
