@@ -1,4 +1,5 @@
 import Images from "../db/images.js";
+import Usuarios from '../db/user.js'
 import { getMimeType, validateMimeType } from "../helpers/mimetype.js";
 import mongoose from "mongoose";
 import { Types } from 'mongoose';
@@ -46,11 +47,17 @@ const imagesController = {
     const imageDoc = await Images.create({
       filename: randomName,
       fileId: fileId, // ahora sí tiene _id
-      user,
+      user:user,
       tipo: action
     });
-
-    return { success: true, message: 'Archivo subido correctamente', image: imageDoc };
+    const newImageUser = await Usuarios.findByIdAndUpdate(
+        user,
+        { $push: { images: fileId } },
+        { new: true })
+        
+    console.log(newImageUser)
+    if(newImageUser){return { success: true, message: 'Archivo subido correctamente', image: imageDoc };}
+    
   } catch (err) {
     console.error('Error en uploadToGridFS:', err);
     return { success: false, message: 'Error al subir el archivo', error: err };

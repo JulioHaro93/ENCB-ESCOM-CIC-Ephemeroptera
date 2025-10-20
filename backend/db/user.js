@@ -16,7 +16,8 @@ const UserSchema = new Schema({
     address: {type: String,},
     nickname: {type: String, unique: true},
     images: [{type: mongoose.Schema.Types.ObjectId, ref:'Images'}],
-    profileImages: [{type: mongoose.Schema.Types.ObjectId, ref:'Images'}]
+    profileImages: [{type: mongoose.Schema.Types.ObjectId, ref:'Images'}],
+    skill: {type: String}
 }, {
     versionKey: false
 })
