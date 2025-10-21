@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getImages } from '../services/images';
 import ImageCard from './ImageCard';
 import ImageCarousel from './ImageCarousel';
 import UploadForm from './UploadForm';
 import { getToken } from '../utils/auth';
-import {useNavigate} from 'react-router-dom'
 
 export default function Profile() {
   const { id } = useParams();
@@ -14,25 +13,22 @@ export default function Profile() {
   const [images, setImages] = useState([]);
   const [carouselIndex, setCarouselIndex] = useState(null);
   const [loading, setLoading] = useState(true);
-  const token = getToken()
-  const navigate = useNavigate()
-  
-  const handleGoDashboard = () => {
-        navigate('/dashboard');
-      }
-  useEffect(() => {
+  const token = getToken();
+  const navigate = useNavigate();
 
-    
+  const handleGoDashboard = () => navigate('/dashboard');
+
+  useEffect(() => {
     const fetchData = async () => {
-      
       try {
         const userRes = await axios.get(`http://localhost:8080/api/profile/${id}`, {
-          headers:{ Authorization: `Bearer ${token}`, 'Content-Type': 'multipart/form-data' },          
-        }
-        );
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
         setUser(userRes.data);
-        console.log(userRes)
+
         const imgs = await getImages(userRes.data.images, id, 0, 10);
+        console.log(imgs);
         setImages(imgs || []);
       } catch (err) {
         console.error(err);
@@ -42,18 +38,50 @@ export default function Profile() {
         setLoading(false);
       }
     };
+
     fetchData();
   }, [id]);
 
-  const openCarousel = (image) => setCarouselIndex(images.findIndex((img) => img._id === image._id));
+  const openCarousel = (image) => {
+    const index = images.findIndex((img) => img._id === image._id);
+    setCarouselIndex(index);
+  };
+
   const closeCarousel = () => setCarouselIndex(null);
 
   const handleUpdate = (imageId, action, metadata) => {
-    if (action === 'delete') setImages((prev) => prev.filter((img) => img._id !== imageId));
-    if (action === 'update') setImages((prev) => prev.map((img) => img._id === imageId ? { ...img, metadata } : img));
+    if (action === 'delete') {
+      setImages((prev) => prev.filter((img) => img._id !== imageId));
+    } else if (action === 'update') {
+      setImages((prev) =>
+        prev.map((img) =>
+          img._id === imageId ? { ...img, metadata } : img
+        )
+      );
+    }
   };
 
-  const handleUpload = (newImage) => setImages((prev) => [newImage, ...prev]);
+  const handleUpload = (newImage) => {
+    setImages((prev) => [newImage, ...prev]);
+  };
+
+  const handleImageClick = async (img) => {
+    try {
+      const res = await axios.get(`http://localhost:8080/api/imagesData/${img._id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const metadata = res.data || {};
+      alert(
+        `Metadata:\n` +
+          `Autor: ${metadata.author || 'Desconocido'}\n` +
+          `Fecha: ${metadata.date || 'Desconocido'}\n` +
+          `Cámara: ${metadata.camera || 'Desconocido'}`
+      );
+    } catch (err) {
+      alert('No hay metadata disponible o hubo un error al cargarla.');
+    }
+  };
 
   return (
     <div className="profile-container">
@@ -63,7 +91,7 @@ export default function Profile() {
         <>
           {user ? (
             <div className="user-info">
-              <h2 color='black'>{user.nombre}</h2>
+              <h2 style={{ color: 'black' }}>{user.nombre}</h2>
               <p>Email: {user.correo}</p>
               <p>Rol: {user.roles}</p>
               <p>Institución: {user.institution}</p>
@@ -73,27 +101,35 @@ export default function Profile() {
             <p>No se pudo cargar la información del usuario</p>
           )}
 
-          <UploadForm userId={id} onUpload={handleUpload} />
+          {/* Botón para volver */}
+          <button onClick={handleGoDashboard} style={{ marginTop: '10px' }}>
+            Volver al Dashboard
+          </button>
 
+          {/* Cuadrícula de imágenes */}
           {images.length === 0 ? (
             <p>El usuario no ha subido imágenes aún</p>
           ) : (
             <div className="images-grid">
-              {images.map((img, i) => (
-                  <img
-                    key={i}
-                    src={img}
-                    alt={`Imagen ${i}`}
-                    style={{ width: "200px", height: "200px", objectFit: "cover" }}
-                  />
-                ))}
-
-              {images.map((img) => (
-                <ImageCard key={img._id} image={img} onClick={openCarousel} />
+                {images.map((img, index) => (
+                <ImageCard
+                  key={img._id || img.url || img.path || index}
+                  image={img}
+                  onClick={() => handleImageClick(img)}
+                  onDelete={() => handleUpdate(img._id || index, 'delete')}
+                  onModify={() => openCarousel(img)}
+                />
               ))}
+
             </div>
           )}
 
+          {/* Formulario de subida debajo de las imágenes */}
+          <div style={{ marginTop: '20px' }}>
+            <UploadForm userId={id} onUpload={handleUpload} />
+          </div>
+
+          {/* Modal tipo carrusel */}
           {carouselIndex !== null && (
             <ImageCarousel
               images={images}
@@ -104,7 +140,6 @@ export default function Profile() {
           )}
         </>
       )}
-      <button onClick={handleGoDashboard}>Volver al Dashboard de usuarios</button>
     </div>
   );
 }

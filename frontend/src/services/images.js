@@ -34,20 +34,16 @@ export const getImages = async (images, userId, skip = 0, limit = 10) => {
       }
     });
 
-    // Espera todas las descargas
     const results = await Promise.all(requests);
-
-    // Filtra nulos
     return results.filter(Boolean);
   } catch (error) {
-    console.error("❌ Error en getImages:", error);
+    console.error("Error en getImages:", error);
     return [];
   }
 };
 
 export const getImagesDos = async (images, userId, skip = 0, limit = 10) => {
-    console.log(1)
-    console.log(images)
+
   const token = getToken();
   console.log(images)
   const imagesArray = new Array()

@@ -1,16 +1,22 @@
-import React, { useState } from 'react';
+import React from "react";
 
 export default function ImageCard({ image, onClick }) {
-  const {id} = useParams();
-  const [name, setUser] = useState();
   return (
-    <div className="image-card" onClick={() => onClick(image)}>
+    <div className="image-card" onClick={onClick}>
       <img
         src={`http://localhost:8080/images/${image._id}`}
-        alt={image.metadata?.title || 'Imagen'}
+        alt={image.metadata?.title || "Imagen"}
+        style={{
+          width: "100%",
+          height: "200px",
+          objectFit: "cover",
+          borderRadius: "8px",
+          cursor: "pointer",
+        }}
       />
-      <div className="image-title">{image.metadata?.title || 'Sin título'}</div>
+      <div style={{ textAlign: "center", marginTop: "5px", color: "white" }}>
+        {image.metadata?.title || "Sin título"}
+      </div>
     </div>
   );
 }
-
