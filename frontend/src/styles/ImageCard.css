@@ -1,0 +1,23 @@
+.image-card {
+  width: 220px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  padding: 8px;
+  box-sizing: border-box;
+}
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  justify-items: center;
+}
+.btn-modificar, .btn-borrar {
+  padding: 6px 10px;
+  font-size: 12px;
+  border-radius: 6px;
+  border: none;
+}
+.btn-modificar { background:#0d6efd; color:#fff; }
+.btn-borrar { background:#dc3545; color:#fff; }

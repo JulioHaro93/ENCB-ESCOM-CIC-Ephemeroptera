@@ -56,6 +56,24 @@ router.get(`${pathh}/userImagesGridFS/:fileId`,autenticateToken, async (req, res
         }
     }})
 
+router.get(`${pathh}/userImagesInfo/:fileId`, autenticateToken, async (req, res) => {
+  console.log("userImagesInfo: Obtener metadata de imagen.");
+  const fileId = req.params.fileId;
+  try {
+    const fileInfo = await imagesControler.getImageInfo(fileId);
+    if (!fileInfo) {
+      return res.status(404).json({ success: false, message: "No se encontró metadata" });
+    }
+    res.status(200).json(fileInfo);
+  } catch (err) {
+    console.error("Error en /userImagesInfo:", err);
+    res.status(500).json({
+      success: false,
+      message: "Error interno al obtener la metadata",
+      error: err.message,
+    });
+  }
+})
 
 router.get(`${pathh}/userImages/:userId`, autenticateToken, async (req,res)=>{
     const query = req.query

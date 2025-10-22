@@ -6,38 +6,47 @@ const API_URL = 'http://localhost:8080/api';
 export const getImages = async (images, userId, skip = 0, limit = 10) => {
   try {
     const token = getToken();
-    const imageUrls = [];
 
-    const requests = images.map(async (imageId) => {
-      try {
-        const res = await axios.get(
-          `${API_URL}/images/userImagesGridFS/${imageId}?user=${userId}&skip=${skip}&limit=${limit}`,
-          {
-            responseType: "arraybuffer",
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
+    const results = await Promise.all(
+      images.map(async (imageId) => {
+        try {
+          // 🧠 1. Obtener metadata JSON
+          const metaRes = await axios.get(
+            `${API_URL}/images/userImagesInfo/${imageId}?user=${userId}&skip=${skip}&limit=${limit}`,
+            { headers: { Authorization: `Bearer ${token}` } }
+          );
 
-        if (res.status === 200 && res.data) {
-          const contentType =
-            res.headers["content-type"] || "image/jpeg";
-          const blob = new Blob([res.data], { type: contentType });
+          // 🧠 2. Obtener imagen binaria
+          const imgRes = await axios.get(
+            `${API_URL}/images/userImagesGridFS/${imageId}?user=${userId}&skip=${skip}&limit=${limit}`,
+            { responseType: "arraybuffer", headers: { Authorization: `Bearer ${token}` } }
+          );
+
+          const contentType = imgRes.headers["content-type"] || "image/jpeg";
+          const blob = new Blob([imgRes.data], { type: contentType });
           const url = URL.createObjectURL(blob);
-          return url;
-        } else {
-          console.warn(`Imagen ${imageId} no obtenida`);
+
+          // ✅ Combinar todo
+          return {
+            _id: imageId,
+            url,
+            metadata: metaRes.data || {},
+          };
+        } catch (err) {
+          console.error(`Error al obtener imagen ${imageId}:`, err);
           return null;
         }
-      } catch (err) {
-        console.error(`Error con imagen ${imageId}:`, err);
-        return null;
-      }
-    });
+      })
+    );
 
-    const results = await Promise.all(requests);
-    return results.filter(Boolean);
-  } catch (error) {
-    console.error("Error en getImages:", error);
+    // Filtrar nulos y duplicados
+    const unique = results.filter(
+      (img, index, self) => img && index === self.findIndex((i) => i._id === img._id)
+    );
+
+    return unique;
+  } catch (err) {
+    console.error("Error en getImages:", err);
     return [];
   }
 };

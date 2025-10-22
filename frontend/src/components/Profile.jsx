@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getImages } from '../services/images';
-import ImageCard from './ImageCard';
+import Imagecard from './ImageCard';
 import ImageCarousel from './ImageCarousel';
 import UploadForm from './UploadForm';
 import { getToken } from '../utils/auth';
-
+import '../styles/ImageCard.css';
 export default function Profile() {
   const { id } = useParams();
   const [user, setUser] = useState(null);
@@ -28,7 +28,6 @@ export default function Profile() {
         setUser(userRes.data);
 
         const imgs = await getImages(userRes.data.images, id, 0, 10);
-        console.log(imgs);
         setImages(imgs || []);
       } catch (err) {
         console.error(err);
@@ -110,17 +109,15 @@ export default function Profile() {
           {images.length === 0 ? (
             <p>El usuario no ha subido imágenes aún</p>
           ) : (
-            <div className="images-grid">
+            <div className="image-grid">
                 {images.map((img, index) => (
-                <ImageCard
-                  key={img._id || img.url || img.path || index}
-                  image={img}
-                  onClick={() => handleImageClick(img)}
+                <Imagecard
+                  key={img._id} image={img} onClick={openCarousel}
+                  /*onClick={() => handleImageClick(img)}
                   onDelete={() => handleUpdate(img._id || index, 'delete')}
-                  onModify={() => openCarousel(img)}
+                  onModify={() => openCarousel(img)}*/
                 />
               ))}
-
             </div>
           )}
 

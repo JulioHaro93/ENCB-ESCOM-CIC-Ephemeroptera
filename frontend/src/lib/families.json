@@ -1,121 +1,109 @@
 {
-  "macroinvertebrados": {
-    "Ephemeroptera": {
-      "Baetidae": {"bmwp": 3},
-      "Caenidae": {"bmwp": 4},
-      "Heptageniidae": {"bmwp": 6},
-      "Leptohyphidae": {"bmwp": 3},
-      "Leptophlebiidae": {"bmwp": 3}
-    },
-    "Plecoptera": {
-      "Perlidae": {"bmwp": 6}
-    },
-    "Odonata": {
-      "Calopterygidae": {"bmwp": 7},
-      "Coenagrionidae": {"bmwp": 3},
-      "Heteragrionidae": {"bmwp": 7},
-      "Platystictidae": {"bmwp": 6},
-      "Polythoridae": {"bmwp": 9},
-      "Gomphidae": {"bmwp": 5},
-      "Libellulidae": {"bmwp": 2}
-    },
-    "Trichoptera": {
-      "Calamoceratidae": {"bmwp": 9},
-      "Ecnomidae": {"bmwp": 8},
-      "Glossosomatidae": {"bmwp": 6},
-      "Helicopsychidae": {"bmwp": 4},
-      "Hydrobiosidae": {"bmwp": 7},
-      "Hydropsychidae": {"bmwp": 2},
-      "Hydroptilidae": {"bmwp": 2},
-      "Lepidostomatidae": {"bmwp": 6},
-      "Leptoceridae": {"bmwp": 5},
-      "Odontoceridae": {"bmwp": 4},
-      "Philopotamidae": {"bmwp": 6},
-      "Polycentropodidae": {"bmwp": 7},
-      "Xiphocentronidae": {"bmwp": 7}
-    },
-    "Lepidoptera": {
-      "Crambidae": {"bmwp": 3},
-      "Cosmopterygidae": {"bmwp": 8}
-    },
-    "Megaloptera": {
-      "Corydalidae": {"bmwp": 6}
-    },
-    "Neuroptera": {
-      "Sisyridae": {"bmwp": 7}
-    },
-    "Coleoptera": {
-      "Dytiscidae": {"bmwp": 8},
-      "Elmidae": {"bmwp": 3},
-      "Hydrophilidae": {"bmwp": 3},
-      "Hydroscaphidae": {"bmwp": 7},
-      "Limnichidae": {"bmwp": 5},
-      "Psephenidae": {"bmwp": 4},
-      "Ptilodactylidae": {"bmwp": 7},
-      "Scirtidae": {"bmwp": 5},
-      "Staphylinidae": {"bmwp": 8}
-    },
-    "Diptera": {
-      "Blephariceridae": {"bmwp": 8},
-      "Ceratopogonidae": {"bmwp": 1},
-      "Chironomidae": {"bmwp": 2},
-      "Culicidae": {"bmwp": 1},
-      "Empididae": {"bmwp": 6},
-      "Muscidae": {"bmwp": 1},
-      "Psychodidae": {"bmwp": 3},
-      "Simuliidae": {"bmwp": 6},
-      "Stratiomyidae": {"bmwp": 5},
-      "Syrphidae": {"bmwp": 1},
-      "Tabanidae": {"bmwp": 7},
-      "Tipulidae": {"bmwp": 2}
-    },
-    "Hemiptera": {
-      "Belostomatidae": {"bmwp": 3},
-      "Hebridae": {"bmwp": 6},
-      "Mesoveliidae": {"bmwp": 7},
-      "Naucoridae": {"bmwp": 3},
-      "Ochteridae": {"bmwp": 9},
-      "Vellidae": {"bmwp": 4}
-    },
-    "Crustacea-Decapoda": {
-      "Atyidae": {"bmwp": 3},
-      "Palaemonidae": {"bmwp": 4},
-      "Pseudothelphusidae": {"bmwp": 4}
-    },
-    "Crustacea-Amphipoda": {
-      "Hyalellidae": {"bmwp": 7}
-    },
-    "Crustacea-Isopoda": {
-      "Isopoda": {"bmwp": 3}
-    },
-    "Arachnida": {
-      "Hydracarina": {"bmwp": 4}
-    },
-    "Collembola": {
-      "Collembola": {"bmwp": 6}
-    },
-    "Mollusca-Gastropoda": {
-      "Ampullaridae": {"bmwp": 8},
-      "Ancylidae": {"bmwp": 4},
-      "Hydrobiidae": {"bmwp": 5},
-      "Physidae": {"bmwp": 3},
-      "Lymnaeidae": {"bmwp": 5},
-      "Planorbidae": {"bmwp": 3},
-      "Thiaridae": {"bmwp": 4},
-      "Neritidae": {"bmwp": 3}
-    },
-    "Mollusca-Bivalvia": {
-      "Corbiculidae": {"bmwp": 7},
-      "Sphaeriidae": {"bmwp": 7}
-    },
-    "Annelida-Oligochaeta": {
-      "Tubificidae": {"bmwp": 1}
-    },
-    "Annelida-Polychaeta": {
-      "Polychaeta": {"bmwp": 3}
-    },
-    "Platyhelminthes": {
-      "Planariidae": {"bmwp": 5}
-    }
-  }
+  "Ephemeroptera": [
+    { "family": "Baetidae", "bmwp": 3 },
+    { "family": "Caenidae", "bmwp": 4 },
+    { "family": "Heptageniidae", "bmwp": 6 },
+    { "family": "Leptohyphidae", "bmwp": 3 },
+    { "family": "Leptophlebiidae", "bmwp": 3 }
+  ],
+  "Plecoptera": [
+    { "family": "Perlidae", "bmwp": 6 }
+  ],
+  "Odonata": [
+    { "family": "Calopterygidae", "bmwp": 7 },
+    { "family": "Coenagrionidae", "bmwp": 3 },
+    { "family": "Heteragrionidae", "bmwp": 7 },
+    { "family": "Platystictidae", "bmwp": 6 },
+    { "family": "Polythoridae", "bmwp": 9 },
+    { "family": "Gomphidae", "bmwp": 5 },
+    { "family": "Libellulidae", "bmwp": 2 }
+  ],
+  "Trichoptera": [
+    { "family": "Calamoceratidae", "bmwp": 9 },
+    { "family": "Ecnomidae", "bmwp": 8 },
+    { "family": "Glossosomatidae", "bmwp": 6 },
+    { "family": "Helicopsychidae", "bmwp": 4 },
+    { "family": "Hydrobiosidae", "bmwp": 7 },
+    { "family": "Hydropsychidae", "bmwp": 2 },
+    { "family": "Hydroptilidae", "bmwp": 2 },
+    { "family": "Lepidostomatidae", "bmwp": 6 },
+    { "family": "Leptoceridae", "bmwp": 5 },
+    { "family": "Odontoceridae", "bmwp": 4 },
+    { "family": "Philopotamidae", "bmwp": 6 },
+    { "family": "Polycentropodidae", "bmwp": 7 },
+    { "family": "Xiphocentronidae", "bmwp": 7 }
+  ],
+  "Coleoptera": [
+    { "family": "Dytiscidae", "bmwp": 8 },
+    { "family": "Elmidae", "bmwp": 3 },
+    { "family": "Hydrophilidae", "bmwp": 3 },
+    { "family": "Hydroscaphidae", "bmwp": 7 },
+    { "family": "Limnichidae", "bmwp": 5 },
+    { "family": "Psephenidae", "bmwp": 4 },
+    { "family": "Ptilodactylidae", "bmwp": 7 },
+    { "family": "Scirtidae", "bmwp": 5 },
+    { "family": "Staphylinidae", "bmwp": 8 }
+  ],
+  "Diptera": [
+    { "family": "Blephariceridae", "bmwp": 8 },
+    { "family": "Ceratopogonidae", "bmwp": 1 },
+    { "family": "Chironomidae", "bmwp": 2 },
+    { "family": "Culicidae", "bmwp": 1 },
+    { "family": "Empididae", "bmwp": 6 },
+    { "family": "Muscidae", "bmwp": 1 },
+    { "family": "Psychodidae", "bmwp": 3 },
+    { "family": "Simuliidae", "bmwp": 6 },
+    { "family": "Stratiomyidae", "bmwp": 5 },
+    { "family": "Syrphidae", "bmwp": 1 },
+    { "family": "Tabanidae", "bmwp": 7 },
+    { "family": "Tipulidae", "bmwp": 2 }
+  ],
+  "Hemiptera": [
+    { "family": "Belostomatidae", "bmwp": 3 },
+    { "family": "Hebridae", "bmwp": 6 },
+    { "family": "Mesoveliidae", "bmwp": 7 },
+    { "family": "Naucoridae", "bmwp": 3 },
+    { "family": "Ochteridae", "bmwp": 9 },
+    { "family": "Vellidae", "bmwp": 4 }
+  ],
+  "Crustacea-Decapoda": [
+    { "family": "Atyidae", "bmwp": 3 },
+    { "family": "Palaemonidae", "bmwp": 4 },
+    { "family": "Pseudothelphusidae", "bmwp": 4 }
+  ],
+  "Crustacea-Amphipoda": [
+    { "family": "Hyalellidae", "bmwp": 7 }
+  ],
+  "Crustacea-Isopoda": [
+    { "family": "Isopoda", "bmwp": 3 }
+  ],
+  "Arachnida": [
+    { "family": "Hydracarina", "bmwp": 4 }
+  ],
+  "Collembola": [
+    { "family": "Collembola", "bmwp": 6 }
+  ],
+  "Mollusca-Gastropoda": [
+    { "family": "Ampullaridae", "bmwp": 8 },
+    { "family": "Ancylidae", "bmwp": 4 },
+    { "family": "Hydrobiidae", "bmwp": 5 },
+    { "family": "Physidae", "bmwp": 3 },
+    { "family": "Lymnaeidae", "bmwp": 5 },
+    { "family": "Planorbidae", "bmwp": 3 },
+    { "family": "Thiaridae", "bmwp": 4 },
+    { "family": "Neritidae", "bmwp": 3 }
+  ],
+  "Mollusca-Bivalvia": [
+    { "family": "Corbiculidae", "bmwp": 7 },
+    { "family": "Sphaeriidae", "bmwp": 7 }
+  ],
+  "Annelida-Oligochaeta": [
+    { "family": "Tubificidae", "bmwp": 1 }
+  ],
+  "Annelida-Polychaeta": [
+    { "family": "Polychaeta", "bmwp": 3 }
+  ],
+  "Platyhelminthes": [
+    { "family": "Planariidae", "bmwp": 5 }
+  ]
 }

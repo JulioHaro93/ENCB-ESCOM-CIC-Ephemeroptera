@@ -1,0 +1,36 @@
+.image-data-form {
+  background: #222;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 20px auto;
+}
+.image-data-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.image-data-form input,
+.image-data-form textarea,
+.image-data-form select {
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+.btn-guardar {
+  background: #28a745;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+}
+.btn-cancelar {
+  background: #dc3545;
+  color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: none;
+  margin-left: 8px;
+}

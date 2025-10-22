@@ -83,6 +83,23 @@ const imagesController = {
         error: err };
     }
   },
+  getImageInfo: async (fileId) => {
+  try {
+    if (!fileId)
+      return { success: false, message: "No se proporcionó el ID del archivo" };
+
+    const file = await gfs
+      .find({ _id: new mongoose.Types.ObjectId(fileId) })
+      .toArray();
+
+    if (!file || file.length === 0)
+      return { success: false, message: "Archivo no encontrado" };
+    return file[0];
+  } catch (err) {
+    console.error("Error en getImageInfo:", err);
+    return { success: false, message: err.message };
+  }
+},
 
   getImages: async (userId, skip = 0, limit = 10, page = 1, tipo = null) => {
     try {
