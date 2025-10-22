@@ -15,9 +15,8 @@ const storageMemory = multer.memoryStorage();
 const upload = multer({ storage: storageMemory }).single('file');
 
 router.get(`${pathh}/userImagesGridFS/:fileId`,autenticateToken, async (req, res)=>{
-    console.log("userImagesGridFS: Obtener imágenes del un usuario.")
+
     const fileId = req.params.fileId;
-    console.log(fileId,'\n')
     const skip = parseInt(req.query.skip) || 0
     const limit = parseInt(req.query.limit) || 10
     const action = 'getImages'
@@ -57,7 +56,7 @@ router.get(`${pathh}/userImagesGridFS/:fileId`,autenticateToken, async (req, res
     }})
 
 router.get(`${pathh}/userImagesInfo/:fileId`, autenticateToken, async (req, res) => {
-  console.log("userImagesInfo: Obtener metadata de imagen.");
+
   const fileId = req.params.fileId;
   try {
     const fileInfo = await imagesControler.getImageInfo(fileId);
@@ -199,7 +198,6 @@ router.post(`${pathh}/uploadGridFS/:id`, autenticateToken,upload, async (req, re
     const validRole = checkRoles(user, action)
     const validAuto = checkAutoProfile(user, user.id)
     const validationResult = uploadPhoto.validate({user})
-    console.log(user)
     const result = await imagesControler.uploadToGridFS(file, user, action)
     res.json(result)
 })

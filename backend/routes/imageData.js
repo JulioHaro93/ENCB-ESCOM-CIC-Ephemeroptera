@@ -17,10 +17,12 @@ router.get(`${path}/:id`, autenticateToken, async (req, res)=>{
 
         if(validationResult.error==null){
         const imagenes = await imagesControler.getImageData(idImage)
+
         if(imagenes.success){
             res.json({imagenes})
         }
         }else{
+
             res.json({
                 error: validationResult.error,
                 httpCode: 400,
@@ -46,16 +48,11 @@ router.post(`${path}/createImageData/:idImage`, autenticateToken, async (req,res
     const validRole = checkRoles(user, action)
     const validAuto = checkAutoProfile(user, user.id)
     const validationResult = createImageData.validate(body)
-
     if(validAuto || validRole){
         if(validationResult.error==null){
             const result = await imagesControler.createImageData(body,idImage,user)
-            console.log("RESULT RESULT")
-            console.log(result)
             res.json(result)
         }else{
-            console.log("ERROR ERROR")
-            console.log(validationResult.error)
             res.json({
                     error: validationResult.error,
                     httpCode: 400,

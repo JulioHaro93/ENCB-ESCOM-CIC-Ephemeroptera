@@ -1,129 +1,166 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import familiesData from "../lib/families.json"; // importa tu archivo
+import families from "../lib/families.json";
 import { getToken } from "../utils/auth";
 
-const API_URL = "http://localhost:8080/api";
-
-export default function ImageDataForm({ imageId, existingData, onClose, onSaved }) {
-  const token = getToken();
-
+export default function ImageDataForm({ imageId, existingData, onClose }) {
   const [formData, setFormData] = useState({
     description: "",
     order: "",
     family: "",
+    bmwp: 0,
     location: "",
     season: "",
     recolector: "",
     vegetation: "",
-    maduration: "",
-    bmwp: 0,
-    date: new Date().toISOString().split("T")[0]
+    maduration: ""
   });
 
+  const token = getToken();
+
+  // Cargar datos existentes si hay
   useEffect(() => {
-    if (existingData) {
-      setFormData({
-        ...existingData,
-        date: existingData.date ? existingData.date.split("T")[0] : new Date().toISOString().split("T")[0],
-      });
-    }
+    if (existingData) setFormData(existingData);
   }, [existingData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    let newData = { ...formData, [name]: value };
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // cuando cambias de orden, reinicia familia y bmwp
+    // Si se cambia el orden, reiniciar familia y bmwp
     if (name === "order") {
-      newData.family = "";
-      newData.bmwp = 0;
+      setFormData((prev) => ({ ...prev, family: "", bmwp: 0 }));
     }
 
-    // cuando cambias familia, busca bmwp
-    if (name === "family" && newData.order) {
-      const selectedFam = familiesData[newData.order]?.find(f => f.family === value);
-      newData.bmwp = selectedFam ? selectedFam.bmwp : 0;
+    // Si se cambia la familia, asignar bmwp automáticamente
+    if (name === "family" && formData.order) {
+      const fam = families[formData.order]?.find((f) => f.family === value);
+      if (fam) setFormData((prev) => ({ ...prev, bmwp: fam.bmwp }));
     }
-
-    setFormData(newData);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const url = existingData
-      ? `${API_URL}/images/modifyImageData/${imageId}`
-      : `${API_URL}/images/createImageData/${imageId}`;
-
-    const method = existingData ? "put" : "post";
-
+    const headers = { Authorization: `Bearer ${token}` };
     try {
-      const res = await axios[method](url, formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.status === 200) {
-        alert("Datos guardados correctamente");
-        onSaved?.(res.data);
-        onClose?.();
+      if (existingData) {
+        // PUT - modificar
+        await axios.put(
+          `http://localhost:8080/api/imageData/modifyImageData/${imageId}`,
+          formData,
+          { headers }
+        );
+        alert("Metadata actualizada correctamente");
       } else {
-        alert("Error al guardar datos");
+        // POST - crear
+        await axios.post(
+          `http://localhost:8080/api/imageData/createImageData/${imageId}`,
+          formData,
+          { headers }
+        );
+        alert("Metadata creada correctamente");
       }
-    } catch (err) {
-      console.error(err);
-      alert("Error de conexión o validación");
+      onClose();
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar los datos.");
     }
   };
 
-  const orders = Object.keys(familiesData);
-  const families = formData.order ? familiesData[formData.order] : [];
-
   return (
-    <div className="image-data-form">
-      <h3>{existingData ? "Modificar información de la imagen" : "Agregar información de la imagen"}</h3>
+    <div
+      style={{
+        background: "#222",
+        color: "#fff",
+        padding: "20px",
+        borderRadius: "12px",
+        marginTop: "10px",
+      }}
+    >
+      <h3>{existingData ? "Modificar Información del animal" : "Agregar información del animal"}</h3>
       <form onSubmit={handleSubmit}>
-        <label>Descripción:</label>
-        <textarea name="description" value={formData.description} onChange={handleChange} />
+        <textarea
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Descripción"
+          style={{ width: "100%", height: "80px", marginBottom: "10px" }}
+        />
 
         <label>Orden:</label>
         <select name="order" value={formData.order} onChange={handleChange}>
-          <option value="">Selecciona un orden</option>
-          {orders.map((o) => (
-            <option key={o} value={o}>{o}</option>
+          <option value="">Seleccione un orden</option>
+          {Object.keys(families).map((order) => (
+            <option key={order} value={order}>
+              {order}
+            </option>
           ))}
         </select>
 
-        <label>Familia:</label>
-        <select name="family" value={formData.family} onChange={handleChange}>
-          <option value="">Selecciona una familia</option>
-          {families.map((f) => (
-            <option key={f.family} value={f.family}>{f.family}</option>
-          ))}
-        </select>
+        {formData.order && (
+          <>
+            <label>Familia:</label>
+            <select
+              name="family"
+              value={formData.family}
+              onChange={handleChange}
+            >
+              <option value="">Seleccione una familia</option>
+              {families[formData.order].map((f) => (
+                <option key={f.family} value={f.family}>
+                  {f.family}
+                </option>
+              ))}
+            </select>
+          </>
+        )}
 
-        <label>BMWP:</label>
-        <input type="number" name="bmwp" value={formData.bmwp} readOnly />
+        <p>BMWP asignado: <strong>{formData.bmwp}</strong></p>
 
-        <label>Ubicación:</label>
-        <input name="location" value={formData.location} onChange={handleChange} />
+        <input
+          type="text"
+          name="location"
+          value={formData.location}
+          onChange={handleChange}
+          placeholder="Ubicación"
+        />
+        <input
+          type="text"
+          name="recolector"
+          value={formData.recolector}
+          onChange={handleChange}
+          placeholder="Recolector"
+        />
+        <input
+          type="text"
+          name="vegetation"
+          value={formData.vegetation}
+          onChange={handleChange}
+          placeholder="Vegetación"
+        />
+        <input
+          type="text"
+          name="maduration"
+          value={formData.maduration}
+          onChange={handleChange}
+          placeholder="Maduración"
+        />
+        <input
+          type="text"
+          name="season"
+          value={formData.season}
+          onChange={handleChange}
+          placeholder="Temporada"
+        />
 
-        <label>Temporada:</label>
-        <input name="season" value={formData.season} onChange={handleChange} />
-
-        <label>Recolector:</label>
-        <input name="recolector" value={formData.recolector} onChange={handleChange} />
-
-        <label>Vegetación:</label>
-        <input name="vegetation" value={formData.vegetation} onChange={handleChange} />
-
-        <label>Maduración:</label>
-        <input name="maduration" value={formData.maduration} onChange={handleChange} />
-
-
-        <div style={{ marginTop: "12px" }}>
-          <button type="submit" className="btn-guardar">💾 Guardar</button>
-          <button type="button" onClick={onClose} className="btn-cancelar">Cancelar</button>
+        <div style={{ marginTop: "10px" }}>
+          <button type="submit" style={{ marginRight: "10px" }}>
+            {existingData ? "Modificar" : "Guardar"}
+          </button>
+          <button type="button" onClick={onClose}>
+            Cerrar
+          </button>
         </div>
       </form>
     </div>

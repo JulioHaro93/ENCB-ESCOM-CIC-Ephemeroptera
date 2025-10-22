@@ -54,19 +54,14 @@ export const getImages = async (images, userId, skip = 0, limit = 10) => {
 export const getImagesDos = async (images, userId, skip = 0, limit = 10) => {
 
   const token = getToken();
-  console.log(images)
   const imagesArray = new Array()
   const imagenesReq = images.forEach(async image => {
-    console.log("imagen actual del foreach!: ",image)
     const res = await axios.get(`${API_URL}/images/userImagesGridFS/${image}?skip=${skip}&limit=${limit}*/`, {
         responseType: 'arraybuffer',
         headers: { Authorization: `Bearer ${token}` },
     });
-    console.log("RES: ", res)
     if(res.data){
         imagesArray.push(res)
-        console.log("RES RES RES RES DE GET IMAGE")
-        console.log(res)
     }else{
         console.log("Error al extraer el archivo")
     }

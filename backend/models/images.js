@@ -55,7 +55,6 @@ const imagesController = {
             { $push: { images: fileId } },
             { new: true })
             
-        console.log(newImageUser)
         if(newImageUser){return { success: true, message: 'Archivo subido correctamente', image: imageDoc };}
         
     } catch (err) {
@@ -66,8 +65,6 @@ const imagesController = {
 
   getImageStream: async (fileId) => {
     try {
-      console.log("File Id;:")
-      console.log(fileId)
       if (!fileId) return {
         success: false,
         message: "No se proporcionó el ID del archivo" }
